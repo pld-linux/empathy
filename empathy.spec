@@ -1,5 +1,5 @@
-#
 Summary:	Very easy to use GNOME Telepathy client
+Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
 Version:	0.5
 Release:	1
@@ -39,6 +39,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 Empathy aims at making Instant Messaging with Jabber as easy as
 possible.
+
+%description -l pl.UTF-8
+Celem Empathy jets uczynienie komunikowania poprzez Jabbera tak
+łatwym jak to tylko możliwe.
 
 %prep
 %setup -q
