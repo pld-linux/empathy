@@ -26,6 +26,7 @@ BuildRequires:	libtool
 BuildRequires:	libxml2-devel >= 1:2.6.27
 BuildRequires:	rpmbuild(macros) >= 1.311
 BuildRequires:	telepathy-glib-devel
+BuildRequires:	telepathy-mission-control-devel
 BuildRequires:	xorg-lib-libXScrnSaver-devel
 Requires(post,postun):	gtk+2 >= 2:2.10.7
 Requires(post,postun):	hicolor-icon-theme
