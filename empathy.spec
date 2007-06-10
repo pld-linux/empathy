@@ -1,39 +1,31 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	0.5
+Version:	0.7
 Release:	1
 License:	GPL
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	e363689295c78ad62d323111a0176ea5
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/0.7/%{name}-%{version}.tar.bz2
+# Source0-md5:	c63eded14fc0ad0feb38114569191f8d
 URL:		http://empathy.imendio.org/
-BuildRequires:	aspell-devel
-BuildRequires:	autoconf
-BuildRequires:	automake
+BuildRequires:	GConf2-devel
+BuildRequires:	autoconf >= 2.59
+BuildRequires:	automake >= 1:1.9
 BuildRequires:	dbus-glib-devel
-BuildRequires:	gnome-common >= 2.12.0
-BuildRequires:	gnome-doc-utils
-BuildRequires:	gnome-panel-devel >= 2.16.2
-BuildRequires:	gnutls-devel >= 1.2.5
-BuildRequires:	gtk+2-devel >= 2:2.10.7
-BuildRequires:	intltool >= 0.35.0
-BuildRequires:	iso-codes
+BuildRequires:	gnome-vfs2-devel >= 2.18.1
+BuildRequires:	gtk+2-devel >= 2:2.10.12
+BuildRequires:	intltool >= 0.35.5
 BuildRequires:	libglade2-devel >= 1:2.6.0
-BuildRequires:	libgnomeui-devel >= 2.16.1
-BuildRequires:	libnotify-devel >= 0.4.2
+BuildRequires:	libgnomeui-devel >= 2.18.1
+BuildRequires:	libtelepathy-devel >= 0.0.51
 BuildRequires:	libtool
-BuildRequires:	libxml2-devel >= 1:2.6.27
+BuildRequires:	libxml2-devel >= 1:2.6.28
+BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.311
-BuildRequires:	telepathy-glib-devel
-BuildRequires:	telepathy-mission-control-devel
-BuildRequires:	xorg-lib-libXScrnSaver-devel
-Requires(post,postun):	gtk+2 >= 2:2.10.7
+BuildRequires:	telepathy-mission-control-devel >= 4.22
+Requires(post,postun):	gtk+2 >= 2:2.10.12
 Requires(post,postun):	hicolor-icon-theme
-Requires(post,postun):	scrollkeeper
-Requires(post,preun):	GConf2 >= 2.16.0
-Requires:	iso-codes
-Requires:	loudmouth >= 1.0.4
+Requires(post,preun):	GConf2
 Obsoletes:	gnome-jabber
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -42,8 +34,8 @@ Empathy aims at making Instant Messaging with Jabber as easy as
 possible.
 
 %description -l pl.UTF-8
-Celem Empathy jets uczynienie komunikowania poprzez Jabbera tak
-łatwym jak to tylko możliwe.
+Celem Empathy jest uczynienie komunikowania poprzez Jabbera tak łatwym
+jak to tylko możliwe.
 
 %prep
 %setup -q
@@ -57,11 +49,7 @@ Celem Empathy jets uczynienie komunikowania poprzez Jabbera tak
 %{__automake}
 %{__autoconf}
 %configure \
-	--disable-schemas-install \
-	--disable-scrollkeeper \
-	--enable-aspell \
-	--enable-dbus \
-	--enable-libnotify
+	--disable-schemas-install
 %{__make}
 
 %install
@@ -78,14 +66,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 %gconf_schema_install empathy.schemas
-%scrollkeeper_update_post
 %update_icon_cache hicolor
 
 %preun
 %gconf_schema_uninstall empathy.schemas
 
 %postun
-%scrollkeeper_update_postun
 %update_icon_cache hicolor
 
 %files -f %{name}.lang
