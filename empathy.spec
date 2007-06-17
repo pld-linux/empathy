@@ -26,6 +26,10 @@ BuildRequires:	telepathy-mission-control-devel >= 4.22
 Requires(post,postun):	gtk+2 >= 2:2.10.12
 Requires(post,postun):	hicolor-icon-theme
 Requires(post,preun):	GConf2
+Suggests:	telepathy-butterfly
+Suggests:	telepathy-gabble
+Suggests:	telepathy-idle
+Suggests:	telepathy-salut
 Obsoletes:	gnome-jabber
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
