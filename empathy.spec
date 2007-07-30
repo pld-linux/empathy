@@ -117,6 +117,9 @@ rm -rf $RPM_BUILD_ROOT
 %update_icon_cache hicolor
 %update_desktop_database_postun
 
+%post	libs -p /sbin/ldconfig
+%postun	libs -p /sbin/ldconfig
+
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS CONTRIBUTORS ChangeLog NEWS README
