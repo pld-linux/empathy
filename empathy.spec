@@ -1,12 +1,12 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	0.8
+Version:	0.10
 Release:	1
 License:	GPL
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/0.8/%{name}-%{version}.tar.bz2
-# Source0-md5:	752074c88667fc796ee0cebe58a1f726
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/0.10/%{name}-%{version}.tar.bz2
+# Source0-md5:	8b3e3efc2963fffe9b1051f7484372ac
 URL:		http://empathy.imendio.org/
 BuildRequires:	GConf2-devel
 BuildRequires:	autoconf >= 2.59
@@ -22,7 +22,8 @@ BuildRequires:	libtool
 BuildRequires:	libxml2-devel >= 1:2.6.28
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.311
-BuildRequires:	telepathy-mission-control-devel >= 4.22
+BuildRequires:	telepathy-mission-control-devel >= 4.27
+Requires:	%{name}-libs = %{version}-%{release}
 Requires(post,postun):	gtk+2 >= 2:2.10.12
 Requires(post,postun):	hicolor-icon-theme
 Requires(post,preun):	GConf2
@@ -41,6 +42,41 @@ possible.
 Celem Empathy jest uczynienie komunikowania poprzez Jabbera tak łatwym
 jak to tylko możliwe.
 
+%package devel
+Summary:	empathy header files
+Summary(pl.UTF-8):	Pliki nagłówkowe empathy
+Group:		X11/Development/Libraries
+Requires:	%{name}-libs = %{version}-%{release}
+
+%description devel
+empathy header files.
+
+%description devel -l pl.UTF-8
+Pliki nagłówkowe empathy.
+
+%package libs
+Summary:	Libraries for empathy
+Summary(pl.UTF-8):	Biblioteki dla empathy
+Group:		Libraries
+
+%description libs
+Libraries for empathy.
+
+%description libs -l pl.UTF-8
+Biblioteki dla empathy.
+
+%package static
+Summary:	empathy static libraries
+Summary(pl.UTF-8):	Statyczne biblioteki empathy
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+
+%description static
+empathy static libraries.
+
+%description static -l pl.UTF-8
+Statyczne biblioteki empathy.
+
 %prep
 %setup -q
 
@@ -53,7 +89,8 @@ jak to tylko możliwe.
 %{__automake}
 %{__autoconf}
 %configure \
-	--disable-schemas-install
+	--disable-schemas-install \
+	--with-html-dir=%{_gtkdocdir}
 %{__make}
 
 %install
@@ -89,3 +126,26 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gnome/autostart/empathy.desktop
 %{_datadir}/mission-control/profiles/*.profile
 %{_datadir}/telepathy/managers/empathy-chat.chandler
+
+%files devel
+%defattr(644,root,root,755)
+%{_includedir}/libempathy
+%{_includedir}/libempathy-gtk
+%attr(755,root,root) %{_libdir}/libempathy.so
+%attr(755,root,root) %{_libdir}/libempathy-gtk.so
+%{_libdir}/libempathy.la
+%{_libdir}/libempathy-gtk.la
+%{_gtkdocdir}/libempathy
+%{_gtkdocdir}/libempathy-gtk
+%{_pkgconfigdir}/libempathy.pc
+%{_pkgconfigdir}/libempathy-gtk.pc
+
+%files libs
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libempathy.so.*.*
+%attr(755,root,root) %{_libdir}/libempathy-gtk.so.*.*
+
+%files static
+%defattr(644,root,root,755)
+%{_libdir}/libempathy.a
+%{_libdir}/libempathy-gtk.a
