@@ -108,12 +108,14 @@ rm -rf $RPM_BUILD_ROOT
 %post
 %gconf_schema_install empathy.schemas
 %update_icon_cache hicolor
+%update_desktop_database_post
 
 %preun
 %gconf_schema_uninstall empathy.schemas
 
 %postun
 %update_icon_cache hicolor
+%update_desktop_database_postun
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
