@@ -42,6 +42,17 @@ possible.
 Celem Empathy jest uczynienie komunikowania poprzez Jabbera tak łatwym
 jak to tylko możliwe.
 
+%package libs
+Summary:	Libraries for empathy
+Summary(pl.UTF-8):	Biblioteki dla empathy
+Group:		Libraries
+
+%description libs
+Libraries for empathy.
+
+%description libs -l pl.UTF-8
+Biblioteki dla empathy.
+
 %package devel
 Summary:	empathy header files
 Summary(pl.UTF-8):	Pliki nagłówkowe empathy
@@ -53,17 +64,6 @@ empathy header files.
 
 %description devel -l pl.UTF-8
 Pliki nagłówkowe empathy.
-
-%package libs
-Summary:	Libraries for empathy
-Summary(pl.UTF-8):	Biblioteki dla empathy
-Group:		Libraries
-
-%description libs
-Libraries for empathy.
-
-%description libs -l pl.UTF-8
-Biblioteki dla empathy.
 
 %package static
 Summary:	empathy static libraries
@@ -130,23 +130,23 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mission-control/profiles/*.profile
 %{_datadir}/telepathy/managers/empathy-chat.chandler
 
-%files devel
-%defattr(644,root,root,755)
-%{_includedir}/libempathy
-%{_includedir}/libempathy-gtk
-%attr(755,root,root) %{_libdir}/libempathy.so
-%attr(755,root,root) %{_libdir}/libempathy-gtk.so
-%{_libdir}/libempathy.la
-%{_libdir}/libempathy-gtk.la
-%{_gtkdocdir}/libempathy
-%{_gtkdocdir}/libempathy-gtk
-%{_pkgconfigdir}/libempathy.pc
-%{_pkgconfigdir}/libempathy-gtk.pc
-
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libempathy.so.*.*
 %attr(755,root,root) %{_libdir}/libempathy-gtk.so.*.*
+
+%files devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libempathy.so
+%attr(755,root,root) %{_libdir}/libempathy-gtk.so
+%{_libdir}/libempathy.la
+%{_libdir}/libempathy-gtk.la
+%{_includedir}/libempathy
+%{_includedir}/libempathy-gtk
+%{_gtkdocdir}/libempathy
+%{_gtkdocdir}/libempathy-gtk
+%{_pkgconfigdir}/libempathy.pc
+%{_pkgconfigdir}/libempathy-gtk.pc
 
 %files static
 %defattr(644,root,root,755)
