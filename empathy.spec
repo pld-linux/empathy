@@ -1,12 +1,12 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	0.10
+Version:	0.11
 Release:	1
 License:	GPL
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/0.10/%{name}-%{version}.tar.bz2
-# Source0-md5:	8b3e3efc2963fffe9b1051f7484372ac
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/0.11/%{name}-%{version}.tar.bz2
+# Source0-md5:	8ee7ae2993d754fe5dcb3bc6cee2c1cd
 URL:		http://empathy.imendio.org/
 BuildRequires:	GConf2-devel
 BuildRequires:	autoconf >= 2.59
@@ -22,7 +22,7 @@ BuildRequires:	libtool
 BuildRequires:	libxml2-devel >= 1:2.6.28
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.311
-BuildRequires:	telepathy-mission-control-devel >= 4.27
+BuildRequires:	telepathy-mission-control-devel >= 4.33
 Requires:	%{name}-libs = %{version}-%{release}
 Requires(post,postun):	gtk+2 >= 2:2.10.12
 Requires(post,postun):	hicolor-icon-theme
