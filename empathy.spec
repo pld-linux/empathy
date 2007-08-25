@@ -22,6 +22,7 @@ BuildRequires:	libtelepathy-devel >= 0.0.51
 BuildRequires:	libtool
 BuildRequires:	libxml2-devel >= 1:2.6.28
 BuildRequires:	pkgconfig
+BuildRequires:	python-devel
 BuildRequires:	rpmbuild(macros) >= 1.311
 BuildRequires:	telepathy-mission-control-devel >= 4.33
 Requires(post,postun):	gtk+2 >= 2:2.10.12
