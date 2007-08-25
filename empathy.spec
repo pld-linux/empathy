@@ -1,12 +1,13 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	0.11
+Version:	0.12
 Release:	1
 License:	GPL
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/0.11/%{name}-%{version}.tar.bz2
-# Source0-md5:	8ee7ae2993d754fe5dcb3bc6cee2c1cd
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/%{version}/%{name}-%{version}.tar.bz2
+# Source0-md5:	bd573be24ca435accb9313f41301a656
+Patch0:		%{name}-python2.5.patch
 URL:		http://empathy.imendio.org/
 BuildRequires:	GConf2-devel
 BuildRequires:	autoconf >= 2.59
@@ -23,10 +24,10 @@ BuildRequires:	libxml2-devel >= 1:2.6.28
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.311
 BuildRequires:	telepathy-mission-control-devel >= 4.33
-Requires:	%{name}-libs = %{version}-%{release}
 Requires(post,postun):	gtk+2 >= 2:2.10.12
 Requires(post,postun):	hicolor-icon-theme
 Requires(post,preun):	GConf2
+Requires:	%{name}-libs = %{version}-%{release}
 Suggests:	telepathy-butterfly
 Suggests:	telepathy-gabble
 Suggests:	telepathy-idle
@@ -77,8 +78,16 @@ empathy static libraries.
 %description static -l pl.UTF-8
 Statyczne biblioteki empathy.
 
+%package -n python-%{name}
+Summary:	Python module for Empathy
+Group:		Development/Libraries
+
+%description -n python-%{name}
+Python module for Empathy.
+
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__glib_gettextize}
@@ -152,3 +161,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libempathy.a
 %{_libdir}/libempathy-gtk.a
+
+%files -n python-%{name}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{py_sitedir}/empathy.so
+%attr(755,root,root) %{py_sitedir}/empathygtk.so
