@@ -81,10 +81,15 @@ Statyczne biblioteki empathy.
 
 %package -n python-%{name}
 Summary:	Python module for Empathy
+Summary(pl.UTF-8):	Moduł Pythona dla Empathy
 Group:		Development/Libraries
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description -n python-%{name}
 Python module for Empathy.
+
+%description -n python-%{name} -l pl.UTF-8
+Moduł Pythona dla Empathy.
 
 %prep
 %setup -q
