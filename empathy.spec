@@ -1,12 +1,12 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	0.12
+Version:	0.13
 Release:	1
 License:	GPL
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	bd573be24ca435accb9313f41301a656
+# Source0-md5:	7b2470404e3f5466c015b2eac2120ad2
 Patch0:		%{name}-python2.5.patch
 URL:		http://empathy.imendio.org/
 BuildRequires:	GConf2-devel
@@ -18,7 +18,7 @@ BuildRequires:	gtk+2-devel >= 2:2.10.12
 BuildRequires:	intltool >= 0.35.5
 BuildRequires:	libglade2-devel >= 1:2.6.0
 BuildRequires:	libgnomeui-devel >= 2.18.1
-BuildRequires:	libtelepathy-devel >= 0.0.51
+BuildRequires:	libtelepathy-devel >= 0.0.57
 BuildRequires:	libtool
 BuildRequires:	libxml2-devel >= 1:2.6.28
 BuildRequires:	pkgconfig
@@ -122,10 +122,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 %gconf_schema_install empathy.schemas
+%gconf_schema_install GNOME_Megaphone_Applet.schemas
 %update_icon_cache hicolor
 
 %preun
 %gconf_schema_uninstall empathy.schemas
+%gconf_schema_uninstall GNOME_Megaphone_Applet.schemas
 
 %postun
 %update_icon_cache hicolor
@@ -140,6 +142,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/%{name}
 %{_iconsdir}/hicolor/*/apps/*
 %{_sysconfdir}/gconf/schemas/empathy.schemas
+%{_sysconfdir}/gconf/schemas/GNOME_Megaphone_Applet.schemas
+%attr(755,root,root) %{_libdir}/megaphone-applet
+%{_libdir}/bonobo/servers/GNOME_Megaphone_Applet.server
 %{_datadir}/dbus-1/services/*.service
 %{_datadir}/gnome/autostart/empathy.desktop
 %{_datadir}/mission-control/profiles/*.profile
