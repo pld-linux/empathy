@@ -1,31 +1,34 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	0.14
+Version:	0.21.1
 Release:	1
 License:	GPL
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	676154eddfb47f212e4716bebc0fdf26
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/0.21/%{name}-%{version}.tar.bz2
+# Source0-md5:	dff1f9f60920cd41bf56bc121eba0b19
 Patch0:		%{name}-python2.5.patch
 URL:		http://empathy.imendio.org/
 BuildRequires:	GConf2-devel
+BuildRequires:	aspell-devel
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake >= 1:1.9
 BuildRequires:	dbus-glib-devel
-BuildRequires:	gnome-vfs2-devel >= 2.18.1
-BuildRequires:	gtk+2-devel >= 2:2.10.12
-BuildRequires:	intltool >= 0.35.5
-BuildRequires:	libglade2-devel >= 1:2.6.0
-BuildRequires:	libgnomeui-devel >= 2.18.1
+BuildRequires:	evolution-data-server-devel
+BuildRequires:	gnome-panel-devel
+BuildRequires:	gnome-vfs2-devel
+BuildRequires:	gtk+2-devel >= 2:2.12.0
+BuildRequires:	intltool >= 0.36.2
+BuildRequires:	iso-codes
+BuildRequires:	libglade2-devel >= 1:2.6.2
 BuildRequires:	libtelepathy-devel >= 0.0.57
 BuildRequires:	libtool
 BuildRequires:	libxml2-devel >= 1:2.6.28
 BuildRequires:	pkgconfig
-BuildRequires:	python-devel
+BuildRequires:	python-pygtk-devel
 BuildRequires:	rpmbuild(macros) >= 1.311
-BuildRequires:	telepathy-mission-control-devel >= 4.33
-Requires(post,postun):	gtk+2 >= 2:2.10.12
+BuildRequires:	telepathy-mission-control-devel >= 4.37
+Requires(post,postun):	gtk+2 >= 2:2.12.0
 Requires(post,postun):	hicolor-icon-theme
 Requires(post,preun):	GConf2
 Requires:	%{name}-libs = %{version}-%{release}
@@ -115,6 +118,8 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT \
 	GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 
+rm -f $RPM_BUILD_ROOT%{py_sitedir}/*.{la,a}
+
 %find_lang %{name} --with-gnome --all-name
 
 %clean
@@ -143,17 +148,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/hicolor/*/apps/*
 %{_sysconfdir}/gconf/schemas/empathy.schemas
 %{_sysconfdir}/gconf/schemas/GNOME_Megaphone_Applet.schemas
+%{_sysconfdir}/xdg/autostart/empathy.desktop
 %attr(755,root,root) %{_libdir}/megaphone-applet
 %{_libdir}/bonobo/servers/GNOME_Megaphone_Applet.server
 %{_datadir}/dbus-1/services/*.service
-%{_datadir}/gnome/autostart/empathy.desktop
 %{_datadir}/mission-control/profiles/*.profile
 %{_datadir}/telepathy/managers/empathy-chat.chandler
 
 %files libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libempathy.so.*.*
-%attr(755,root,root) %{_libdir}/libempathy-gtk.so.*.*
+%attr(755,root,root) %{_libdir}/libempathy.so.*.*.*
+%attr(755,root,root) %{_libdir}/libempathy-gtk.so.*.*.*
 
 %files devel
 %defattr(644,root,root,755)
