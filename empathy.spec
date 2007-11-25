@@ -2,7 +2,7 @@ Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
 Version:	0.21.2
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/0.21/%{name}-%{version}.tar.bz2
@@ -83,6 +83,18 @@ empathy static libraries.
 
 %description static -l pl.UTF-8
 Statyczne biblioteki empathy.
+
+%package apidocs
+Summary:	empathy API documentation
+Summary(pl.UTF-8):	Dokumentacja API empathy
+Group:		Documentation
+Requires:	gtk-doc-common
+
+%description apidocs
+empathy API documentation.
+
+%description apidocs -l pl.UTF-8
+Dokumentacja API empathy.
 
 %package -n python-%{name}
 Summary:	Python module for Empathy
@@ -175,8 +187,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libempathy-gtk.la
 %{_includedir}/libempathy
 %{_includedir}/libempathy-gtk
-%{_gtkdocdir}/libempathy
-%{_gtkdocdir}/libempathy-gtk
 %{_pkgconfigdir}/libempathy.pc
 %{_pkgconfigdir}/libempathy-gtk.pc
 
@@ -184,6 +194,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libempathy.a
 %{_libdir}/libempathy-gtk.a
+
+%files apidocs
+%defattr(644,root,root,755)
+%{_gtkdocdir}/libempathy
+%{_gtkdocdir}/libempathy-gtk
 
 %files -n python-%{name}
 %defattr(644,root,root,755)
