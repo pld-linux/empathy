@@ -1,12 +1,12 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	0.21.2
-Release:	2
+Version:	0.21.3
+Release:	1
 License:	GPL
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/0.21/%{name}-%{version}.tar.bz2
-# Source0-md5:	c7951d16d843f64a73ea475797308c64
+# Source0-md5:	4beeb0fc1eab0a6f733d4a9f4165064e
 Patch0:		%{name}-python2.5.patch
 URL:		http://empathy.imendio.org/
 BuildRequires:	GConf2-devel
@@ -166,7 +166,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/gconf/schemas/empathy.schemas
 %{_sysconfdir}/gconf/schemas/GNOME_Megaphone_Applet.schemas
 %{_sysconfdir}/xdg/autostart/empathy.desktop
-%attr(755,root,root) %{_libdir}/empathy-call-chandler
+#%attr(755,root,root) %{_libdir}/empathy-call-chandler
 %attr(755,root,root) %{_libdir}/empathy-chat-chandler
 %attr(755,root,root) %{_libdir}/megaphone-applet
 %{_libdir}/bonobo/servers/GNOME_Megaphone_Applet.server
