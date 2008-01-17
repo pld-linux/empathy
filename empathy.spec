@@ -1,12 +1,12 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	0.21.5
+Version:	0.21.5.2
 Release:	1
 License:	GPL
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/0.21/%{name}-%{version}.tar.bz2
-# Source0-md5:	4f3981dfd1ca51262eef3face325d77c
+# Source0-md5:	d9eb1d4ffc292b9bb83d0854b5a89515
 Patch0:		%{name}-python2.5.patch
 URL:		http://empathy.imendio.org/
 BuildRequires:	GConf2-devel
@@ -116,6 +116,7 @@ sed -i -e s#sr\@Latn#sr\@latin# po/LINGUAS
 mv po/sr\@{Latn,latin}.po
 
 %build
+mkdir m4
 %{__glib_gettextize}
 %{__libtoolize}
 %{__intltoolize}
