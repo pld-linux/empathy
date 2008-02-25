@@ -14,6 +14,7 @@ BuildRequires:	aspell-devel
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake >= 1:1.9
 BuildRequires:	dbus-glib-devel
+BuildRequires:	esound-devel
 BuildRequires:	evolution-data-server-devel
 BuildRequires:	gnome-panel-devel
 BuildRequires:	gnome-vfs2-devel
