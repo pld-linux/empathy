@@ -1,12 +1,12 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	0.22.1
+Version:	0.23.1
 Release:	1
 License:	GPL
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/0.22/%{name}-%{version}.tar.bz2
-# Source0-md5:	d8045104e4aff6559f81c13c37b22c9e
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/0.23/%{name}-%{version}.tar.bz2
+# Source0-md5:	8ed7511804b1e0d77416843dc66d99c7
 Patch0:		%{name}-python2.5.patch
 URL:		http://empathy.imendio.org/
 BuildRequires:	GConf2-devel
@@ -28,7 +28,7 @@ BuildRequires:	libxml2-devel >= 1:2.6.28
 BuildRequires:	pkgconfig
 BuildRequires:	python-pygtk-devel
 BuildRequires:	rpmbuild(macros) >= 1.311
-BuildRequires:	telepathy-glib-devel >= 0.7.1
+BuildRequires:	telepathy-glib-devel >= 0.7.6
 BuildRequires:	telepathy-mission-control-devel >= 4.53
 Requires(post,postun):	gtk+2 >= 2:2.12.0
 Requires(post,postun):	hicolor-icon-theme
@@ -112,20 +112,21 @@ Moduł Pythona dla Empathy.
 
 %prep
 %setup -q
-%patch0 -p1
+#%patch0 -p1
 
 sed -i -e s#sr\@Latn#sr\@latin# po/LINGUAS
 mv po/sr\@{Latn,latin}.po
 
 %build
-%{__glib_gettextize}
-%{__libtoolize}
-%{__intltoolize}
-%{__aclocal}
-%{__autoheader}
-%{__automake}
-%{__autoconf}
+#%{__glib_gettextize}
+#%{__libtoolize}
+#%{__intltoolize}
+#%{__aclocal}
+#%{__autoheader}
+#%{__automake}
+#%{__autoconf}
 %configure \
+	--with-compile-warnings=no \
 	--disable-schemas-install \
 	--with-html-dir=%{_gtkdocdir}
 %{__make}
@@ -167,14 +168,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/hicolor/*/apps/*
 %{_sysconfdir}/gconf/schemas/empathy.schemas
 %{_sysconfdir}/gconf/schemas/GNOME_Megaphone_Applet.schemas
-%{_sysconfdir}/xdg/autostart/empathy.desktop
-%attr(755,root,root) %{_libdir}/empathy-call-chandler
+#%{_sysconfdir}/xdg/autostart/empathy.desktop
+#%attr(755,root,root) %{_libdir}/empathy-call-chandler
+%attr(755,root,root) %{_libdir}/nothere-applet
 %attr(755,root,root) %{_libdir}/megaphone-applet
-%{_libdir}/bonobo/servers/GNOME_Megaphone_Applet.server
-%{_datadir}/dbus-1/services/*.service
+%{_libdir}/bonobo/servers/*.server
+#%{_datadir}/dbus-1/services/*.service
 %{_datadir}/mission-control/profiles/*.profile
-%{_datadir}/telepathy/managers/empathy-chat.chandler
-%{_datadir}/telepathy/managers/empathy-call.chandler
+#%{_datadir}/telepathy/managers/empathy-chat.chandler
+#%{_datadir}/telepathy/managers/empathy-call.chandler
+%{_desktopdir}/*.desktop
+%{_omf_dest_dir}/%{name}
 
 %files libs
 %defattr(644,root,root,755)
