@@ -1,12 +1,12 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	0.23.1
+Version:	0.23.2
 Release:	1
 License:	GPL
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/0.23/%{name}-%{version}.tar.bz2
-# Source0-md5:	8ed7511804b1e0d77416843dc66d99c7
+# Source0-md5:	6a5038cd420d5ffdf49f2732c6f81edd
 Patch0:		%{name}-python2.5.patch
 URL:		http://empathy.imendio.org/
 BuildRequires:	GConf2-devel
@@ -28,7 +28,7 @@ BuildRequires:	libxml2-devel >= 1:2.6.28
 BuildRequires:	pkgconfig
 BuildRequires:	python-pygtk-devel
 BuildRequires:	rpmbuild(macros) >= 1.311
-BuildRequires:	telepathy-glib-devel >= 0.7.6
+BuildRequires:	telepathy-glib-devel >= 0.7.7
 BuildRequires:	telepathy-mission-control-devel >= 4.53
 Requires(post,postun):	gtk+2 >= 2:2.12.0
 Requires(post,postun):	hicolor-icon-theme
@@ -177,13 +177,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mission-control/profiles/*.profile
 #%{_datadir}/telepathy/managers/empathy-chat.chandler
 #%{_datadir}/telepathy/managers/empathy-call.chandler
+%{_mandir}/man1/empathy*.1*
 %{_desktopdir}/*.desktop
 %{_omf_dest_dir}/%{name}
 
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libempathy.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libempathy.so.13
 %attr(755,root,root) %{_libdir}/libempathy-gtk.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libempathy-gtk.so.13
 
 %files devel
 %defattr(644,root,root,755)
