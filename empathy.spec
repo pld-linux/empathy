@@ -7,7 +7,6 @@ License:	GPL
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.23/%{name}-%{version}.tar.bz2
 # Source0-md5:	6bc1f3b9562e7645391a0950d1c2462a
-Patch0:		%{name}-python2.5.patch
 URL:		http://empathy.imendio.org/
 BuildRequires:	GConf2-devel
 BuildRequires:	aspell-devel
@@ -112,7 +111,6 @@ Moduł Pythona dla Empathy.
 
 %prep
 %setup -q
-#%patch0 -p1
 
 %build
 #%{__glib_gettextize}
