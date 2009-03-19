@@ -1,42 +1,51 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	2.24.1
-Release:	3
-License:	GPL
+Version:	2.26.0
+Release:	1
+License:	GPL v2
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.24/%{name}-%{version}.tar.bz2
-# Source0-md5:	98d1ef485b23a75a9a115547ca2da66a
-URL:		http://empathy.imendio.org/
-BuildRequires:	GConf2-devel
-BuildRequires:	aspell-devel
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.26/%{name}-%{version}.tar.bz2
+# Source0-md5:	f5b2d8ca7bd5e315491e3d05a7fd03c1
+URL:		http://live.gnome.org/Empathy
+BuildRequires:	GConf2-devel >= 2.26.0
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake >= 1:1.9
-BuildRequires:	dbus-glib-devel
-BuildRequires:	esound-devel
-BuildRequires:	evolution-data-server-devel >= 2.23.6
-BuildRequires:	gnome-panel-devel
-BuildRequires:	gnome-vfs2-devel
-BuildRequires:	gtk+2-devel >= 2:2.12.0
-BuildRequires:	intltool >= 0.36.2
-BuildRequires:	iso-codes
+BuildRequires:	check >= 0.9.4
+BuildRequires:	dbus-glib-devel >= 0.74
+BuildRequires:	enchant-devel >= 1.2.0
+BuildRequires:	evolution-data-server-devel >= 2.24.0
+BuildRequires:	gettext-devel
+BuildRequires:	gnome-common >= 2.24.0
+BuildRequires:	gnome-panel-devel >= 2.24.0
+BuildRequires:	gstreamer-devel
+BuildRequires:	gstreamer-plugins-base-devel
+BuildRequires:	gtk+2-devel >= 2:2.16.0
+BuildRequires:	gtk-doc >= 1.3
+BuildRequires:	intltool >= 0.40.0
+BuildRequires:	iso-codes >= 0.35
+BuildRequires:	libcanberra-gtk-devel >= 0.4
 BuildRequires:	libglade2-devel >= 1:2.6.2
-BuildRequires:	libtelepathy-devel >= 0.3.1
+BuildRequires:	libnotify-devel >= 0.4.4
 BuildRequires:	libtool
 BuildRequires:	libxml2-devel >= 1:2.6.28
 BuildRequires:	pkgconfig
 BuildRequires:	python-pygtk-devel
+BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
-BuildRequires:	telepathy-glib-devel >= 0.7.7
-BuildRequires:	telepathy-mission-control-devel >= 4.53
+BuildRequires:	telepathy-farsight-devel
+BuildRequires:	telepathy-glib-devel >= 0.7.23
+BuildRequires:	telepathy-mission-control-devel >= 4.61
 Requires(post,postun):	gtk+2 >= 2:2.12.0
 Requires(post,postun):	hicolor-icon-theme
 Requires(post,preun):	GConf2
 Requires:	%{name}-libs = %{version}-%{release}
 Suggests:	telepathy-butterfly
 Suggests:	telepathy-gabble
+Suggests:	telepathy-haze
 Suggests:	telepathy-idle
 Suggests:	telepathy-salut
+Suggests:	telepathy-sofiasip
 Obsoletes:	gnome-jabber
 # sr@Latn vs. sr@latin
 Conflicts:	glibc-misc < 6:2.7
@@ -51,56 +60,61 @@ Celem Empathy jest uczynienie komunikowania poprzez Jabbera tak łatwym
 jak to tylko możliwe.
 
 %package libs
-Summary:	Libraries for empathy
-Summary(pl.UTF-8):	Biblioteki dla empathy
+Summary:	Libraries for Empathy
+Summary(pl.UTF-8):	Biblioteki dla Empathy
 Group:		Libraries
 
 %description libs
-Libraries for empathy.
+Libraries for Empathy.
 
 %description libs -l pl.UTF-8
-Biblioteki dla empathy.
+Biblioteki dla Empathy.
 
 %package devel
-Summary:	empathy header files
-Summary(pl.UTF-8):	Pliki nagłówkowe empathy
+Summary:	Empathy header files
+Summary(pl.UTF-8):	Pliki nagłówkowe Empathy
 Group:		X11/Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	gtk+2-devel >= 2:2.16.0
+Requires:	libglade2-devel >= 1:2.6.2
+Requires:	libxml2-devel >= 1:2.6.28
+Requires:	telepathy-glib-devel >= 0.7.23
+Requires:	telepathy-mission-control-devel >= 4.61
 
 %description devel
-empathy header files.
+Empathy header files.
 
 %description devel -l pl.UTF-8
-Pliki nagłówkowe empathy.
+Pliki nagłówkowe Empathy.
 
 %package static
-Summary:	empathy static libraries
-Summary(pl.UTF-8):	Statyczne biblioteki empathy
-Group:		Development/Libraries
+Summary:	Empathy static libraries
+Summary(pl.UTF-8):	Statyczne biblioteki Empathy
+Group:		X11/Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
-empathy static libraries.
+Empathy static libraries.
 
 %description static -l pl.UTF-8
-Statyczne biblioteki empathy.
+Statyczne biblioteki Empathy.
 
 %package apidocs
-Summary:	empathy API documentation
-Summary(pl.UTF-8):	Dokumentacja API empathy
+Summary:	Empathy API documentation
+Summary(pl.UTF-8):	Dokumentacja API Empathy
 Group:		Documentation
 Requires:	gtk-doc-common
 
 %description apidocs
-empathy API documentation.
+Empathy API documentation.
 
 %description apidocs -l pl.UTF-8
-Dokumentacja API empathy.
+Dokumentacja API Empathy.
 
 %package -n python-%{name}
 Summary:	Python module for Empathy
 Summary(pl.UTF-8):	Moduł Pythona dla Empathy
-Group:		Development/Libraries
+Group:		Libraries/Python
 Requires:	%{name}-libs = %{version}-%{release}
 
 %description -n python-%{name}
@@ -113,16 +127,16 @@ Moduł Pythona dla Empathy.
 %setup -q
 
 %build
-#%{__glib_gettextize}
-#%{__libtoolize}
-#%{__intltoolize}
-#%{__aclocal}
-#%{__autoheader}
-#%{__automake}
-#%{__autoconf}
+%{__intltoolize}
+%{__libtoolize}
+%{__aclocal} -I m4
+%{__autoconf}
+%{__autoheader}
+%{__automake}
 %configure \
 	--with-compile-warnings=no \
 	--disable-schemas-install \
+	--enable-gtk-doc \
 	--with-html-dir=%{_gtkdocdir}
 %{__make}
 
@@ -135,7 +149,7 @@ rm -rf $RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{py_sitedir}/*.{la,a}
 
-%find_lang %{name} --with-gnome --all-name
+%find_lang %{name} --with-gnome --with-omf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -158,30 +172,25 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS CONTRIBUTORS ChangeLog NEWS README
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_bindir}/empathy
+%attr(755,root,root) %{_bindir}/empathy-logs
 %{_datadir}/%{name}
 %{_iconsdir}/hicolor/*/apps/*
 %{_sysconfdir}/gconf/schemas/empathy.schemas
 %{_sysconfdir}/gconf/schemas/GNOME_Megaphone_Applet.schemas
-#%{_sysconfdir}/xdg/autostart/empathy.desktop
-#%attr(755,root,root) %{_libdir}/empathy-call-chandler
 %attr(755,root,root) %{_libdir}/nothere-applet
 %attr(755,root,root) %{_libdir}/megaphone-applet
 %{_libdir}/bonobo/servers/*.server
-#%{_datadir}/dbus-1/services/*.service
 %{_datadir}/mission-control/profiles/*.profile
-#%{_datadir}/telepathy/managers/empathy-chat.chandler
-#%{_datadir}/telepathy/managers/empathy-call.chandler
 %{_mandir}/man1/empathy*.1*
 %{_desktopdir}/*.desktop
-%{_omf_dest_dir}/%{name}
 
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libempathy.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libempathy.so.14
+%attr(755,root,root) %ghost %{_libdir}/libempathy.so.23
 %attr(755,root,root) %{_libdir}/libempathy-gtk.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libempathy-gtk.so.15
+%attr(755,root,root) %ghost %{_libdir}/libempathy-gtk.so.19
 
 %files devel
 %defattr(644,root,root,755)
