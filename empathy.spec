@@ -2,11 +2,12 @@ Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
 Version:	2.27.3
-Release:	1
+Release:	1.1
 License:	GPL v2
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.27/%{name}-%{version}.tar.bz2
 # Source0-md5:	082624ff1ea1086b8f64658a0949fcc5
+Patch0:		%{name}-bug585885.patch
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	GConf2-devel >= 2.26.0
 BuildRequires:	autoconf >= 2.59
@@ -25,6 +26,7 @@ BuildRequires:	gtk-doc >= 1.3
 BuildRequires:	intltool >= 0.40.0
 BuildRequires:	iso-codes >= 0.35
 BuildRequires:	libcanberra-gtk-devel >= 0.4
+BuildRequires:	libchamplain-devel >= 0.3
 BuildRequires:	libglade2-devel >= 1:2.6.2
 BuildRequires:	libnotify-devel >= 0.4.4
 BuildRequires:	libtool
@@ -125,6 +127,7 @@ Moduł Pythona dla Empathy.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__intltoolize}
