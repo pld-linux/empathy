@@ -15,6 +15,7 @@ BuildRequires:	check >= 0.9.4
 BuildRequires:	dbus-glib-devel >= 0.74
 BuildRequires:	enchant-devel >= 1.2.0
 BuildRequires:	evolution-data-server-devel >= 2.24.0
+BuildRequires:	geoclue-devel
 BuildRequires:	gettext-devel
 BuildRequires:	gnome-common >= 2.24.0
 BuildRequires:	gnome-panel-devel >= 2.24.0
@@ -137,6 +138,7 @@ Moduł Pythona dla Empathy.
 %configure \
 	--with-compile-warnings=no \
 	--disable-schemas-install \
+	--enable-location \
 	--enable-gtk-doc \
 	--enable-shave \
 	--with-html-dir=%{_gtkdocdir}
