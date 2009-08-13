@@ -91,18 +91,6 @@ Empathy header files.
 %description devel -l pl.UTF-8
 Pliki nagłówkowe Empathy.
 
-%package static
-Summary:	Empathy static libraries
-Summary(pl.UTF-8):	Statyczne biblioteki Empathy
-Group:		X11/Development/Libraries
-Requires:	%{name}-devel = %{version}-%{release}
-
-%description static
-Empathy static libraries.
-
-%description static -l pl.UTF-8
-Statyczne biblioteki Empathy.
-
 %package apidocs
 Summary:	Empathy API documentation
 Summary(pl.UTF-8):	Dokumentacja API Empathy
@@ -141,6 +129,7 @@ Moduł Pythona dla Empathy.
 %configure \
 	--with-compile-warnings=no \
 	--disable-schemas-install \
+	--disable-static \
 	--enable-location \
 	--enable-gtk-doc \
 	--enable-shave \
@@ -209,11 +198,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libempathy-gtk
 %{_pkgconfigdir}/libempathy.pc
 %{_pkgconfigdir}/libempathy-gtk.pc
-
-%files static
-%defattr(644,root,root,755)
-%{_libdir}/libempathy.a
-%{_libdir}/libempathy-gtk.a
 
 %files apidocs
 %defattr(644,root,root,755)
