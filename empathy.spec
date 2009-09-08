@@ -1,13 +1,12 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	2.27.5
-Release:	2
+Version:	2.27.92
+Release:	1
 License:	GPL v2
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.27/%{name}-%{version}.tar.bz2
-# Source0-md5:	27d69e0db8874ae40d924dbf80703be6
-Patch0:		%{name}-clutter-gtk-0.10.patch
+# Source0-md5:	888f07eada6eea765123f987d208ea13
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	GConf2-devel >= 2.26.0
 BuildRequires:	autoconf >= 2.59
@@ -20,6 +19,7 @@ BuildRequires:	evolution-data-server-devel >= 2.24.0
 BuildRequires:	geoclue-devel
 BuildRequires:	gettext-devel
 BuildRequires:	gnome-common >= 2.24.0
+BuildRequires:	gnome-keyring-devel
 BuildRequires:	gnome-panel-devel >= 2.24.0
 BuildRequires:	gstreamer-devel
 BuildRequires:	gstreamer-plugins-base-devel
@@ -38,8 +38,8 @@ BuildRequires:	python-pygtk-devel
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
 BuildRequires:	telepathy-farsight-devel
-BuildRequires:	telepathy-glib-devel >= 0.7.23
-BuildRequires:	telepathy-mission-control-devel >= 4.61
+BuildRequires:	telepathy-glib-devel >= 0.7.36
+BuildRequires:	telepathy-mission-control-devel >= 5.0
 Requires(post,postun):	gtk+2 >= 2:2.12.0
 Requires(post,postun):	hicolor-icon-theme
 Requires(post,preun):	GConf2
@@ -117,7 +117,8 @@ Moduł Pythona dla Empathy.
 
 %prep
 %setup -q
-%patch0 -p1
+rm po/ca@valencia.po
+sed -i s#^ca@valencia## po/LINGUAS
 
 %build
 %{__intltoolize}
@@ -171,22 +172,23 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/empathy
 %attr(755,root,root) %{_bindir}/empathy-logs
 %{_datadir}/%{name}
+%{_datadir}/telepathy/clients/Empathy.client
+%{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.service
 %{_iconsdir}/hicolor/*/apps/*
 %{_sysconfdir}/gconf/schemas/empathy.schemas
 %{_sysconfdir}/gconf/schemas/GNOME_Megaphone_Applet.schemas
 %attr(755,root,root) %{_libdir}/nothere-applet
 %attr(755,root,root) %{_libdir}/megaphone-applet
 %{_libdir}/bonobo/servers/*.server
-%{_datadir}/mission-control/profiles/*.profile
 %{_mandir}/man1/empathy*.1*
 %{_desktopdir}/*.desktop
 
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libempathy.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libempathy.so.27
+%attr(755,root,root) %ghost %{_libdir}/libempathy.so.30
 %attr(755,root,root) %{_libdir}/libempathy-gtk.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libempathy-gtk.so.25
+%attr(755,root,root) %ghost %{_libdir}/libempathy-gtk.so.28
 
 %files devel
 %defattr(644,root,root,755)
