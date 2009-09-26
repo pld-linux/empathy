@@ -1,22 +1,25 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	2.26.2
+Version:	2.28.0
 Release:	1
 License:	GPL v2
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.26/%{name}-%{version}.tar.bz2
-# Source0-md5:	7d42b4c54373c3706a3da301cd616329
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.28/%{name}-%{version}.tar.bz2
+# Source0-md5:	a51a560d45595402c32d441f7075b005
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	GConf2-devel >= 2.26.0
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake >= 1:1.9
 BuildRequires:	check >= 0.9.4
+BuildRequires:	clutter-gtk-devel >= 0.10.0
 BuildRequires:	dbus-glib-devel >= 0.74
 BuildRequires:	enchant-devel >= 1.2.0
 BuildRequires:	evolution-data-server-devel >= 2.24.0
+BuildRequires:	geoclue-devel
 BuildRequires:	gettext-devel
 BuildRequires:	gnome-common >= 2.24.0
+BuildRequires:	gnome-keyring-devel
 BuildRequires:	gnome-panel-devel >= 2.24.0
 BuildRequires:	gstreamer-devel
 BuildRequires:	gstreamer-plugins-base-devel
@@ -25,6 +28,7 @@ BuildRequires:	gtk-doc >= 1.3
 BuildRequires:	intltool >= 0.40.0
 BuildRequires:	iso-codes >= 0.35
 BuildRequires:	libcanberra-gtk-devel >= 0.4
+BuildRequires:	libchamplain-devel >= 0.3
 BuildRequires:	libglade2-devel >= 1:2.6.2
 BuildRequires:	libnotify-devel >= 0.4.4
 BuildRequires:	libtool
@@ -34,8 +38,8 @@ BuildRequires:	python-pygtk-devel
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
 BuildRequires:	telepathy-farsight-devel
-BuildRequires:	telepathy-glib-devel >= 0.7.23
-BuildRequires:	telepathy-mission-control-devel >= 4.61
+BuildRequires:	telepathy-glib-devel >= 0.7.36
+BuildRequires:	telepathy-mission-control-devel >= 5.0
 Requires(post,postun):	gtk+2 >= 2:2.12.0
 Requires(post,postun):	hicolor-icon-theme
 Requires(post,preun):	GConf2
@@ -87,18 +91,6 @@ Empathy header files.
 %description devel -l pl.UTF-8
 Pliki nagłówkowe Empathy.
 
-%package static
-Summary:	Empathy static libraries
-Summary(pl.UTF-8):	Statyczne biblioteki Empathy
-Group:		X11/Development/Libraries
-Requires:	%{name}-devel = %{version}-%{release}
-
-%description static
-Empathy static libraries.
-
-%description static -l pl.UTF-8
-Statyczne biblioteki Empathy.
-
 %package apidocs
 Summary:	Empathy API documentation
 Summary(pl.UTF-8):	Dokumentacja API Empathy
@@ -125,6 +117,8 @@ Moduł Pythona dla Empathy.
 
 %prep
 %setup -q
+rm po/ca@valencia.po
+sed -i s#^ca@valencia## po/LINGUAS
 
 %build
 %{__intltoolize}
@@ -136,9 +130,12 @@ Moduł Pythona dla Empathy.
 %configure \
 	--with-compile-warnings=no \
 	--disable-schemas-install \
+	--disable-static \
+	--enable-location \
 	--enable-gtk-doc \
+	--enable-shave \
 	--with-html-dir=%{_gtkdocdir}
-%{__make}
+%{__make} -j 1
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -175,22 +172,23 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/empathy
 %attr(755,root,root) %{_bindir}/empathy-logs
 %{_datadir}/%{name}
+%{_datadir}/telepathy/clients/Empathy.client
+%{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.service
 %{_iconsdir}/hicolor/*/apps/*
 %{_sysconfdir}/gconf/schemas/empathy.schemas
 %{_sysconfdir}/gconf/schemas/GNOME_Megaphone_Applet.schemas
 %attr(755,root,root) %{_libdir}/nothere-applet
 %attr(755,root,root) %{_libdir}/megaphone-applet
 %{_libdir}/bonobo/servers/*.server
-%{_datadir}/mission-control/profiles/*.profile
 %{_mandir}/man1/empathy*.1*
 %{_desktopdir}/*.desktop
 
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libempathy.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libempathy.so.23
+%attr(755,root,root) %ghost %{_libdir}/libempathy.so.30
 %attr(755,root,root) %{_libdir}/libempathy-gtk.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libempathy-gtk.so.19
+%attr(755,root,root) %ghost %{_libdir}/libempathy-gtk.so.28
 
 %files devel
 %defattr(644,root,root,755)
@@ -202,11 +200,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libempathy-gtk
 %{_pkgconfigdir}/libempathy.pc
 %{_pkgconfigdir}/libempathy-gtk.pc
-
-%files static
-%defattr(644,root,root,755)
-%{_libdir}/libempathy.a
-%{_libdir}/libempathy-gtk.a
 
 %files apidocs
 %defattr(644,root,root,755)
