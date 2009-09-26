@@ -117,8 +117,6 @@ Moduł Pythona dla Empathy.
 
 %prep
 %setup -q
-rm po/ca@valencia.po
-sed -i s#^ca@valencia## po/LINGUAS
 
 %build
 %{__intltoolize}
