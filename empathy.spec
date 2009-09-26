@@ -1,12 +1,12 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	2.27.92
+Version:	2.28.0
 Release:	1
 License:	GPL v2
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.27/%{name}-%{version}.tar.bz2
-# Source0-md5:	888f07eada6eea765123f987d208ea13
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.28/%{name}-%{version}.tar.bz2
+# Source0-md5:	a51a560d45595402c32d441f7075b005
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	GConf2-devel >= 2.26.0
 BuildRequires:	autoconf >= 2.59
@@ -135,7 +135,7 @@ sed -i s#^ca@valencia## po/LINGUAS
 	--enable-gtk-doc \
 	--enable-shave \
 	--with-html-dir=%{_gtkdocdir}
-%{__make}
+%{__make} -j 1
 
 %install
 rm -rf $RPM_BUILD_ROOT
