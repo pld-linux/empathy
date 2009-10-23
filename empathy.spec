@@ -1,14 +1,15 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	2.28.0
+Version:	2.28.1
 Release:	1
 License:	GPL v2
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.28/%{name}-%{version}.tar.bz2
-# Source0-md5:	a51a560d45595402c32d441f7075b005
+# Source0-md5:	021a05da920055d514cc51c4a538377f
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	GConf2-devel >= 2.26.0
+BuildRequires:	NetworkManager-devel >= 0.7
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake >= 1:1.9
 BuildRequires:	check >= 0.9.4
@@ -16,22 +17,24 @@ BuildRequires:	clutter-gtk-devel >= 0.10.0
 BuildRequires:	dbus-glib-devel >= 0.74
 BuildRequires:	enchant-devel >= 1.2.0
 BuildRequires:	evolution-data-server-devel >= 2.24.0
-BuildRequires:	geoclue-devel
+BuildRequires:	geoclue-devel >= 0.11
 BuildRequires:	gettext-devel
 BuildRequires:	gnome-common >= 2.24.0
+BuildRequires:	gnome-doc-utils >= 0.18.0
 BuildRequires:	gnome-keyring-devel
 BuildRequires:	gnome-panel-devel >= 2.24.0
 BuildRequires:	gstreamer-devel
 BuildRequires:	gstreamer-plugins-base-devel
 BuildRequires:	gtk+2-devel >= 2:2.16.0
 BuildRequires:	gtk-doc >= 1.3
+BuildRequires:	gtk-webkit-devel >= 1.1.7
 BuildRequires:	intltool >= 0.40.0
 BuildRequires:	iso-codes >= 0.35
 BuildRequires:	libcanberra-gtk-devel >= 0.4
-BuildRequires:	libchamplain-devel >= 0.3
-BuildRequires:	libglade2-devel >= 1:2.6.2
+BuildRequires:	libchamplain-devel >= 0.4
 BuildRequires:	libnotify-devel >= 0.4.4
 BuildRequires:	libtool
+BuildRequires:	libunique-devel
 BuildRequires:	libxml2-devel >= 1:2.6.28
 BuildRequires:	pkgconfig
 BuildRequires:	python-pygtk-devel
@@ -80,10 +83,10 @@ Summary(pl.UTF-8):	Pliki nagłówkowe Empathy
 Group:		X11/Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	gtk+2-devel >= 2:2.16.0
-Requires:	libglade2-devel >= 1:2.6.2
+Requires:	libcanberra-gtk-devel >= 0.4
 Requires:	libxml2-devel >= 1:2.6.28
-Requires:	telepathy-glib-devel >= 0.7.23
-Requires:	telepathy-mission-control-devel >= 4.61
+Requires:	telepathy-glib-devel >= 0.7.36
+Requires:	telepathy-mission-control-devel >= 5.0
 
 %description devel
 Empathy header files.
