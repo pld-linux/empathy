@@ -1,12 +1,12 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	2.28.1.1
-Release:	2
+Version:	2.29.2
+Release:	1
 License:	GPL v2
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.28/%{name}-%{version}.tar.bz2
-# Source0-md5:	e24600feffce66c3b494056f15efa653
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.29/%{name}-%{version}.tar.bz2
+# Source0-md5:	1ee738907d31549f2dadb2bead938d2b
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	GConf2-devel >= 2.26.0
 BuildRequires:	NetworkManager-devel >= 0.7
@@ -53,7 +53,11 @@ Suggests:	telepathy-haze
 Suggests:	telepathy-idle
 Suggests:	telepathy-salut
 Suggests:	telepathy-sofiasip
+Obsoletes:	empathy-apidocs < 2.29.1
+Obsoletes:	empathy-devel < 2.29.1
+Obsoletes:	empathy-libs < 2.29.1
 Obsoletes:	gnome-jabber
+Obsoletes:	python-empathy < 2.29.1
 # sr@Latn vs. sr@latin
 Conflicts:	glibc-misc < 6:2.7
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -65,58 +69,6 @@ possible.
 %description -l pl.UTF-8
 Celem Empathy jest uczynienie komunikowania poprzez Jabbera tak łatwym
 jak to tylko możliwe.
-
-%package libs
-Summary:	Libraries for Empathy
-Summary(pl.UTF-8):	Biblioteki dla Empathy
-Group:		Libraries
-
-%description libs
-Libraries for Empathy.
-
-%description libs -l pl.UTF-8
-Biblioteki dla Empathy.
-
-%package devel
-Summary:	Empathy header files
-Summary(pl.UTF-8):	Pliki nagłówkowe Empathy
-Group:		X11/Development/Libraries
-Requires:	%{name}-libs = %{version}-%{release}
-Requires:	gtk+2-devel >= 2:2.16.0
-Requires:	libcanberra-gtk-devel >= 0.4
-Requires:	libxml2-devel >= 1:2.6.28
-Requires:	telepathy-glib-devel >= 0.7.36
-Requires:	telepathy-mission-control-devel >= 5.0
-
-%description devel
-Empathy header files.
-
-%description devel -l pl.UTF-8
-Pliki nagłówkowe Empathy.
-
-%package apidocs
-Summary:	Empathy API documentation
-Summary(pl.UTF-8):	Dokumentacja API Empathy
-Group:		Documentation
-Requires:	gtk-doc-common
-
-%description apidocs
-Empathy API documentation.
-
-%description apidocs -l pl.UTF-8
-Dokumentacja API Empathy.
-
-%package -n python-%{name}
-Summary:	Python module for Empathy
-Summary(pl.UTF-8):	Moduł Pythona dla Empathy
-Group:		Libraries/Python
-Requires:	%{name}-libs = %{version}-%{release}
-
-%description -n python-%{name}
-Python module for Empathy.
-
-%description -n python-%{name} -l pl.UTF-8
-Moduł Pythona dla Empathy.
 
 %prep
 %setup -q
@@ -154,18 +106,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 %gconf_schema_install empathy.schemas
-%gconf_schema_install GNOME_Megaphone_Applet.schemas
 %update_icon_cache hicolor
 
 %preun
 %gconf_schema_uninstall empathy.schemas
-%gconf_schema_uninstall GNOME_Megaphone_Applet.schemas
 
 %postun
 %update_icon_cache hicolor
-
-%post	libs -p /sbin/ldconfig
-%postun	libs -p /sbin/ldconfig
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
@@ -177,37 +124,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.service
 %{_iconsdir}/hicolor/*/apps/*
 %{_sysconfdir}/gconf/schemas/empathy.schemas
-%{_sysconfdir}/gconf/schemas/GNOME_Megaphone_Applet.schemas
-%attr(755,root,root) %{_libdir}/nothere-applet
-%attr(755,root,root) %{_libdir}/megaphone-applet
-%{_libdir}/bonobo/servers/*.server
 %{_mandir}/man1/empathy*.1*
 %{_desktopdir}/*.desktop
-
-%files libs
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libempathy.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libempathy.so.30
-%attr(755,root,root) %{_libdir}/libempathy-gtk.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libempathy-gtk.so.28
-
-%files devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libempathy.so
-%attr(755,root,root) %{_libdir}/libempathy-gtk.so
-%{_libdir}/libempathy.la
-%{_libdir}/libempathy-gtk.la
-%{_includedir}/libempathy
-%{_includedir}/libempathy-gtk
-%{_pkgconfigdir}/libempathy.pc
-%{_pkgconfigdir}/libempathy-gtk.pc
-
-%files apidocs
-%defattr(644,root,root,755)
-%{_gtkdocdir}/libempathy
-%{_gtkdocdir}/libempathy-gtk
-
-%files -n python-%{name}
-%defattr(644,root,root,755)
-%attr(755,root,root) %{py_sitedir}/empathy.so
-%attr(755,root,root) %{py_sitedir}/empathygtk.so
