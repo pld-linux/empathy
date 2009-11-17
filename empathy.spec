@@ -46,7 +46,6 @@ BuildRequires:	telepathy-mission-control-devel >= 5.0
 Requires(post,postun):	gtk+2 >= 2:2.12.0
 Requires(post,postun):	hicolor-icon-theme
 Requires(post,preun):	GConf2
-Requires:	%{name}-libs = %{version}-%{release}
 Suggests:	telepathy-butterfly
 Suggests:	telepathy-gabble
 Suggests:	telepathy-haze
@@ -72,6 +71,8 @@ jak to tylko możliwe.
 
 %prep
 %setup -q
+rm po/en@shaw.po
+sed -i 's/^en@shaw//' po/LINGUAS
 
 %build
 %{__intltoolize}
