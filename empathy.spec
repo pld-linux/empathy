@@ -36,6 +36,7 @@ BuildRequires:	libnotify-devel >= 0.4.4
 BuildRequires:	libtool
 BuildRequires:	libunique-devel
 BuildRequires:	libxml2-devel >= 1:2.6.28
+BuildRequires:	nautilus-sendto-devel >= 2.28.0.1
 BuildRequires:	pkgconfig
 BuildRequires:	python-pygtk-devel
 BuildRequires:	rpmbuild(find_lang) >= 1.23
@@ -69,6 +70,19 @@ possible.
 Celem Empathy jest uczynienie komunikowania poprzez Jabbera tak łatwym
 jak to tylko możliwe.
 
+%package -n nautilus-sendto-empathy
+Summary:	Empathy support for sending files in Nautilus
+Summary(pl.UTF-8):	Wsparcie Empathy przy wysyłaniu plików z Nautilusa
+Group:		X11/Applications
+Requires:	%{name} = %{version}-%{release}
+Requires:	nautilus-sendto >= 2.28.0.1
+
+%description -n nautilus-sendto-empathy
+Enables sending files from Nautilus to your Empathy contacts.
+
+%description -n nautilus-sendto-empathy -l pl.UTF-8
+Pozwala na przesyłanie z Nautilusa plików do kontaktów Empathy.
+
 %prep
 %setup -q
 rm po/en@shaw.po
@@ -86,6 +100,7 @@ sed -i 's/^en@shaw//' po/LINGUAS
 	--disable-schemas-install \
 	--disable-static \
 	--enable-location \
+	--enable-nautilus-sendto \
 	--enable-gtk-doc \
 	--enable-shave \
 	--with-html-dir=%{_gtkdocdir}
@@ -126,3 +141,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/gconf/schemas/empathy.schemas
 %{_mandir}/man1/empathy*.1*
 %{_desktopdir}/*.desktop
+
+%files -n nautilus-sendto-empathy
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/nautilus-sendto/plugins/libnstempathy.so
