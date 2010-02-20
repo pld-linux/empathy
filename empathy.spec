@@ -15,6 +15,7 @@ BuildRequires:	automake >= 1:1.9
 BuildRequires:	check >= 0.9.4
 BuildRequires:	clutter-gtk-devel >= 0.10.0
 BuildRequires:	dbus-glib-devel >= 0.74
+BuildRequires:	docbook-dtd412-xml
 BuildRequires:	enchant-devel >= 1.2.0
 BuildRequires:	evolution-data-server-devel >= 2.24.0
 BuildRequires:	geoclue-devel >= 0.11
@@ -38,8 +39,10 @@ BuildRequires:	libunique-devel
 BuildRequires:	libxml2-devel >= 1:2.6.28
 BuildRequires:	pkgconfig
 BuildRequires:	python-pygtk-devel
+BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
+BuildRequires:	sed >= 4.0
 BuildRequires:	telepathy-farsight-devel
 BuildRequires:	telepathy-glib-devel >= 0.7.36
 BuildRequires:	telepathy-mission-control-devel >= 5.0
@@ -120,6 +123,7 @@ Moduł Pythona dla Empathy.
 
 %prep
 %setup -q
+%{__sed} 's/libnm_glib/libnm-glib/' -i configure.ac
 
 %build
 %{__intltoolize}
@@ -129,6 +133,7 @@ Moduł Pythona dla Empathy.
 %{__autoheader}
 %{__automake}
 %configure \
+	--with-connectivity=nm \
 	--with-compile-warnings=no \
 	--disable-schemas-install \
 	--disable-static \
