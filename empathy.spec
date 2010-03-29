@@ -1,12 +1,12 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	2.28.2
-Release:	3
+Version:	2.30.0
+Release:	1
 License:	GPL v2
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.28/%{name}-%{version}.tar.bz2
-# Source0-md5:	8d578d82d1e51dc8c83642b81c0fb65a
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.30/%{name}-%{version}.tar.bz2
+# Source0-md5:	d7525475d5d3a0274212637852dc0d7d
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	GConf2-devel >= 2.26.0
 BuildRequires:	NetworkManager-devel >= 0.7
@@ -37,6 +37,7 @@ BuildRequires:	libnotify-devel >= 0.4.4
 BuildRequires:	libtool
 BuildRequires:	libunique-devel
 BuildRequires:	libxml2-devel >= 1:2.6.28
+BuildRequires:	nautilus-sendto-devel >= 2.28.0.1
 BuildRequires:	pkgconfig
 BuildRequires:	python-pygtk-devel
 BuildRequires:	rpm-pythonprov
@@ -49,14 +50,17 @@ BuildRequires:	telepathy-mission-control-devel >= 5.0
 Requires(post,postun):	gtk+2 >= 2:2.12.0
 Requires(post,postun):	hicolor-icon-theme
 Requires(post,preun):	GConf2
-Requires:	%{name}-libs = %{version}-%{release}
 Suggests:	telepathy-butterfly
 Suggests:	telepathy-gabble
 Suggests:	telepathy-haze
 Suggests:	telepathy-idle
 Suggests:	telepathy-salut
 Suggests:	telepathy-sofiasip
+Obsoletes:	empathy-apidocs < 2.29.1
+Obsoletes:	empathy-devel < 2.29.1
+Obsoletes:	empathy-libs < 2.29.1
 Obsoletes:	gnome-jabber
+Obsoletes:	python-empathy < 2.29.1
 # sr@Latn vs. sr@latin
 Conflicts:	glibc-misc < 6:2.7
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -69,61 +73,23 @@ possible.
 Celem Empathy jest uczynienie komunikowania poprzez Jabbera tak łatwym
 jak to tylko możliwe.
 
-%package libs
-Summary:	Libraries for Empathy
-Summary(pl.UTF-8):	Biblioteki dla Empathy
-Group:		Libraries
+%package -n nautilus-sendto-empathy
+Summary:	Empathy support for sending files in Nautilus
+Summary(pl.UTF-8):	Wsparcie Empathy przy wysyłaniu plików z Nautilusa
+Group:		X11/Applications
+Requires:	%{name} = %{version}-%{release}
+Requires:	nautilus-sendto >= 2.28.0.1
 
-%description libs
-Libraries for Empathy.
+%description -n nautilus-sendto-empathy
+Enables sending files from Nautilus to your Empathy contacts.
 
-%description libs -l pl.UTF-8
-Biblioteki dla Empathy.
-
-%package devel
-Summary:	Empathy header files
-Summary(pl.UTF-8):	Pliki nagłówkowe Empathy
-Group:		X11/Development/Libraries
-Requires:	%{name}-libs = %{version}-%{release}
-Requires:	gtk+2-devel >= 2:2.16.0
-Requires:	libcanberra-gtk-devel >= 0.4
-Requires:	libxml2-devel >= 1:2.6.28
-Requires:	telepathy-glib-devel >= 0.7.36
-Requires:	telepathy-mission-control-devel >= 5.0
-
-%description devel
-Empathy header files.
-
-%description devel -l pl.UTF-8
-Pliki nagłówkowe Empathy.
-
-%package apidocs
-Summary:	Empathy API documentation
-Summary(pl.UTF-8):	Dokumentacja API Empathy
-Group:		Documentation
-Requires:	gtk-doc-common
-
-%description apidocs
-Empathy API documentation.
-
-%description apidocs -l pl.UTF-8
-Dokumentacja API Empathy.
-
-%package -n python-%{name}
-Summary:	Python module for Empathy
-Summary(pl.UTF-8):	Moduł Pythona dla Empathy
-Group:		Libraries/Python
-Requires:	%{name}-libs = %{version}-%{release}
-
-%description -n python-%{name}
-Python module for Empathy.
-
-%description -n python-%{name} -l pl.UTF-8
-Moduł Pythona dla Empathy.
+%description -n nautilus-sendto-empathy -l pl.UTF-8
+Pozwala na przesyłanie z Nautilusa plików do kontaktów Empathy.
 
 %prep
 %setup -q
-%{__sed} 's/libnm_glib/libnm-glib/' -i configure.ac
+rm po/en@shaw.po
+sed -i 's/^en@shaw//' po/LINGUAS
 
 %build
 %{__intltoolize}
@@ -138,6 +104,7 @@ Moduł Pythona dla Empathy.
 	--disable-schemas-install \
 	--disable-static \
 	--enable-location \
+	--enable-nautilus-sendto \
 	--enable-gtk-doc \
 	--enable-shave \
 	--with-html-dir=%{_gtkdocdir}
@@ -159,60 +126,28 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 %gconf_schema_install empathy.schemas
-%gconf_schema_install GNOME_Megaphone_Applet.schemas
 %update_icon_cache hicolor
 
 %preun
 %gconf_schema_uninstall empathy.schemas
-%gconf_schema_uninstall GNOME_Megaphone_Applet.schemas
 
 %postun
 %update_icon_cache hicolor
-
-%post	libs -p /sbin/ldconfig
-%postun	libs -p /sbin/ldconfig
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS CONTRIBUTORS ChangeLog NEWS README
 %attr(755,root,root) %{_bindir}/empathy
-%attr(755,root,root) %{_bindir}/empathy-logs
+%attr(755,root,root) %{_bindir}/empathy-accounts
+%attr(755,root,root) %{_bindir}/empathy-debugger
 %{_datadir}/%{name}
 %{_datadir}/telepathy/clients/Empathy.client
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.service
 %{_iconsdir}/hicolor/*/apps/*
 %{_sysconfdir}/gconf/schemas/empathy.schemas
-%{_sysconfdir}/gconf/schemas/GNOME_Megaphone_Applet.schemas
-%attr(755,root,root) %{_libdir}/nothere-applet
-%attr(755,root,root) %{_libdir}/megaphone-applet
-%{_libdir}/bonobo/servers/*.server
 %{_mandir}/man1/empathy*.1*
 %{_desktopdir}/*.desktop
 
-%files libs
+%files -n nautilus-sendto-empathy
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libempathy.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libempathy.so.30
-%attr(755,root,root) %{_libdir}/libempathy-gtk.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libempathy-gtk.so.28
-
-%files devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libempathy.so
-%attr(755,root,root) %{_libdir}/libempathy-gtk.so
-%{_libdir}/libempathy.la
-%{_libdir}/libempathy-gtk.la
-%{_includedir}/libempathy
-%{_includedir}/libempathy-gtk
-%{_pkgconfigdir}/libempathy.pc
-%{_pkgconfigdir}/libempathy-gtk.pc
-
-%files apidocs
-%defattr(644,root,root,755)
-%{_gtkdocdir}/libempathy
-%{_gtkdocdir}/libempathy-gtk
-
-%files -n python-%{name}
-%defattr(644,root,root,755)
-%attr(755,root,root) %{py_sitedir}/empathy.so
-%attr(755,root,root) %{py_sitedir}/empathygtk.so
+%attr(755,root,root) %{_libdir}/nautilus-sendto/plugins/libnstempathy.so
