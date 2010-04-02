@@ -45,7 +45,7 @@ BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
 BuildRequires:	sed >= 4.0
 BuildRequires:	telepathy-farsight-devel
-BuildRequires:	telepathy-glib-devel >= 0.7.36
+BuildRequires:	telepathy-glib-devel >= 0.9.2
 BuildRequires:	telepathy-mission-control-devel >= 5.0
 Requires(post,postun):	gtk+2 >= 2:2.12.0
 Requires(post,postun):	hicolor-icon-theme
