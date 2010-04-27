@@ -47,6 +47,7 @@ BuildRequires:	rpmbuild(macros) >= 1.311
 BuildRequires:	sed >= 4.0
 BuildRequires:	telepathy-farsight-devel
 BuildRequires:	telepathy-glib-devel >= 0.9.2
+BuildRequires:	telepathy-logger-devel
 BuildRequires:	telepathy-mission-control-devel >= 5.0
 Requires(post,postun):	gtk+2 >= 2:2.12.0
 Requires(post,postun):	hicolor-icon-theme
@@ -105,6 +106,7 @@ sed -i 's/^en@shaw//' po/LINGUAS
 	--disable-schemas-install \
 	--disable-silent-rules \
 	--disable-static \
+	--enable-favourite-contacts \
 	--enable-location \
 	--enable-nautilus-sendto
 
