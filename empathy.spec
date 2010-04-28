@@ -2,11 +2,12 @@ Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
 Version:	2.30.1
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.30/%{name}-%{version}.tar.bz2
 # Source0-md5:	62a048b41421e24eef4fea8193f5d9af
+Patch0:		configure.patch
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	GConf2-devel >= 2.26.0
 BuildRequires:	NetworkManager-devel >= 0.7
@@ -91,6 +92,8 @@ Pozwala na przesyłanie z Nautilusa plików do kontaktów Empathy.
 
 %prep
 %setup -q
+%patch0 -p1
+
 rm po/en@shaw.po
 sed -i 's/^en@shaw//' po/LINGUAS
 
