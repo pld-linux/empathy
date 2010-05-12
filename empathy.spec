@@ -13,10 +13,10 @@ BuildRequires:	GConf2-devel >= 2.26.0
 BuildRequires:	NetworkManager-devel >= 0.7
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake >= 1:1.9
-BuildRequires:	check >= 0.9.4
-BuildRequires:	clutter-gtk-devel >= 0.10.0
+#BuildRequires:	check >= 0.9.4
+#BuildRequires:	clutter-gtk-devel >= 0.10.0
 BuildRequires:	dbus-glib-devel >= 0.74
-BuildRequires:	docbook-dtd412-xml
+#BuildRequires:	docbook-dtd412-xml
 BuildRequires:	enchant-devel >= 1.2.0
 BuildRequires:	evolution-data-server-devel >= 2.24.0
 BuildRequires:	farsight2-devel
@@ -24,11 +24,11 @@ BuildRequires:	geoclue-devel >= 0.11
 BuildRequires:	gettext-devel
 BuildRequires:	gnome-common >= 2.24.0
 BuildRequires:	gnome-doc-utils >= 0.18.0
-BuildRequires:	gnome-panel-devel >= 2.24.0
+#BuildRequires:	gnome-panel-devel >= 2.24.0
 BuildRequires:	gstreamer-devel
 BuildRequires:	gstreamer-plugins-base-devel
 BuildRequires:	gtk+2-devel >= 2:2.18.0
-BuildRequires:	gtk-doc >= 1.3
+#BuildRequires:	gtk-doc >= 1.3
 BuildRequires:	gtk-webkit-devel >= 1.1.7
 BuildRequires:	intltool >= 0.40.0
 BuildRequires:	iso-codes >= 0.35
@@ -41,15 +41,15 @@ BuildRequires:	libunique-devel
 BuildRequires:	libxml2-devel >= 1:2.6.28
 BuildRequires:	nautilus-sendto-devel >= 2.28.1
 BuildRequires:	pkgconfig
-BuildRequires:	python-pygtk-devel
-BuildRequires:	rpm-pythonprov
+#BuildRequires:	python-pygtk-devel
+#BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
 BuildRequires:	sed >= 4.0
 BuildRequires:	telepathy-farsight-devel
 BuildRequires:	telepathy-glib-devel >= 0.9.2
 BuildRequires:	telepathy-logger-devel
-BuildRequires:	telepathy-mission-control-devel >= 5.0
+#BuildRequires:	telepathy-mission-control-devel >= 5.0
 Requires(post,postun):	gtk+2 >= 2:2.12.0
 Requires(post,postun):	hicolor-icon-theme
 Requires(post,preun):	GConf2
