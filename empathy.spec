@@ -1,8 +1,12 @@
+#
+# Conditional build:
+%bcond_with		tpl		# enable telepathy-logger code and disable the empathy logger
+
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
 Version:	2.30.3
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.30/%{name}-%{version}.tar.bz2
@@ -48,7 +52,7 @@ BuildRequires:	rpmbuild(macros) >= 1.311
 BuildRequires:	sed >= 4.0
 BuildRequires:	telepathy-farsight-devel
 BuildRequires:	telepathy-glib-devel >= 0.9.2
-BuildRequires:	telepathy-logger-devel
+%{?with_tpl:BuildRequires:	telepathy-logger-devel >= 0.1.1}
 #BuildRequires:	telepathy-mission-control-devel >= 5.0
 Requires(post,postun):	gtk+2 >= 2:2.12.0
 Requires(post,postun):	hicolor-icon-theme
@@ -105,11 +109,12 @@ sed -i 's/^en@shaw//' po/LINGUAS
 %{__autoheader}
 %{__automake}
 %configure \
+	%{!?with_tpl:--disable-tpl} \
 	--with-connectivity=nm \
 	--disable-schemas-install \
 	--disable-silent-rules \
 	--disable-static \
-	--enable-favourite-contacts \
+	%{?with_tpl:--enable-favourite-contacts} \
 	--enable-location \
 	--enable-nautilus-sendto
 
