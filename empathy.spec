@@ -1,16 +1,12 @@
-#
-# Conditional build:
-%bcond_with		tpl		# enable telepathy-logger code and disable the empathy logger
-
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	2.30.3
-Release:	2
+Version:	2.31.91.1
+Release:	1
 License:	GPL v2
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.30/%{name}-%{version}.tar.bz2
-# Source0-md5:	d797f30219da87d4564fb92705626cd3
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.31/%{name}-%{version}.tar.bz2
+# Source0-md5:	17298d833ffa82662c4f5e7f8c743933
 Patch0:		configure.patch
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	GConf2-devel >= 2.26.0
@@ -24,6 +20,7 @@ BuildRequires:	dbus-glib-devel >= 0.74
 BuildRequires:	enchant-devel >= 1.2.0
 BuildRequires:	evolution-data-server-devel >= 2.24.0
 BuildRequires:	farsight2-devel
+BuildRequires:	folks-devel
 BuildRequires:	geoclue-devel >= 0.11
 BuildRequires:	gettext-devel
 BuildRequires:	gnome-common >= 2.24.0
@@ -43,20 +40,17 @@ BuildRequires:	libnotify-devel >= 0.4.4
 BuildRequires:	libtool
 BuildRequires:	libunique-devel
 BuildRequires:	libxml2-devel >= 1:2.6.28
-BuildRequires:	nautilus-sendto-devel >= 2.28.1
+BuildRequires:	nautilus-sendto-devel >= 2.31.7
 BuildRequires:	pkgconfig
-#BuildRequires:	python-pygtk-devel
-#BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
 BuildRequires:	sed >= 4.0
 BuildRequires:	telepathy-farsight-devel
 BuildRequires:	telepathy-glib-devel >= 0.9.2
-%{?with_tpl:BuildRequires:	telepathy-logger-devel >= 0.1.1}
-#BuildRequires:	telepathy-mission-control-devel >= 5.0
+BuildRequires:	telepathy-logger-devel >= 0.1.5
+Requires(post,postun):	glib2 >= 1:2.25.11
 Requires(post,postun):	gtk+2 >= 2:2.12.0
 Requires(post,postun):	hicolor-icon-theme
-Requires(post,preun):	GConf2
 Requires:	telepathy-mission-control
 Suggests:	telepathy-butterfly
 Suggests:	telepathy-gabble
@@ -109,12 +103,11 @@ sed -i 's/^en@shaw//' po/LINGUAS
 %{__autoheader}
 %{__automake}
 %configure \
-	%{!?with_tpl:--disable-tpl} \
 	--with-connectivity=nm \
 	--disable-schemas-install \
 	--disable-silent-rules \
 	--disable-static \
-	%{?with_tpl:--enable-favourite-contacts} \
+	--enable-favourite-contacts \
 	--enable-location \
 	--enable-nautilus-sendto
 
@@ -136,13 +129,11 @@ rm -f $RPM_BUILD_ROOT%{py_sitedir}/*.{la,a}
 rm -rf $RPM_BUILD_ROOT
 
 %post
-%gconf_schema_install empathy.schemas
+glib-compile-schemas %{_datadir}/glib-2.0/schemas
 %update_icon_cache hicolor
 
-%preun
-%gconf_schema_uninstall empathy.schemas
-
 %postun
+glib-compile-schemas %{_datadir}/glib-2.0/schemas
 %update_icon_cache hicolor
 
 %files -f %{name}.lang
@@ -151,11 +142,18 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/empathy
 %attr(755,root,root) %{_bindir}/empathy-accounts
 %attr(755,root,root) %{_bindir}/empathy-debugger
+%attr(755,root,root) %{_libexecdir}/empathy-auth-client
+%attr(755,root,root) %{_libexecdir}/empathy-av
 %{_datadir}/%{name}
-%{_datadir}/telepathy/clients/Empathy.client
+%{_datadir}/GConf/gsettings/empathy.convert
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.service
+%{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.AudioVideo.service
+%{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.Auth.service
+%{_datadir}/glib-2.0/schemas/org.gnome.Empathy.gschema.xml
+%{_datadir}/telepathy/clients/Empathy.client
+%{_datadir}/telepathy/clients/Empathy.AudioVideo.client
+%{_datadir}/telepathy/clients/Empathy.Auth.client
 %{_iconsdir}/hicolor/*/apps/*
-%{_sysconfdir}/gconf/schemas/empathy.schemas
 %{_mandir}/man1/empathy*.1*
 %{_desktopdir}/*.desktop
 
