@@ -10,47 +10,48 @@ Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.32/%{name}-%{version}.
 Patch0:		configure.patch
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	GConf2-devel >= 2.26.0
-BuildRequires:	NetworkManager-devel >= 0.7
+BuildRequires:	NetworkManager-devel >= 0.7.0
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake >= 1:1.9
-#BuildRequires:	check >= 0.9.4
-#BuildRequires:	clutter-gtk-devel >= 0.10.0
+BuildRequires:	clutter-gtk-devel >= 0.10.0
 BuildRequires:	dbus-glib-devel >= 0.74
-#BuildRequires:	docbook-dtd412-xml
+BuildRequires:	docbook-dtd412-xml
 BuildRequires:	enchant-devel >= 1.2.0
 BuildRequires:	evolution-data-server-devel >= 2.24.0
 BuildRequires:	farsight2-devel
-BuildRequires:	folks-devel
+BuildRequires:	folks-devel >= 0.1.5
 BuildRequires:	geoclue-devel >= 0.11
 BuildRequires:	gettext-devel
+BuildRequires:	glib2-devel >= 1:2.26.0
 BuildRequires:	gnome-common >= 2.24.0
 BuildRequires:	gnome-doc-utils >= 0.18.0
-#BuildRequires:	gnome-panel-devel >= 2.24.0
+BuildRequires:	gnome-keyring-devel >= 2.26.0
+BuildRequires:	gnutls-devel >= 2.8.5
 BuildRequires:	gstreamer-devel
 BuildRequires:	gstreamer-plugins-base-devel
-BuildRequires:	gtk+2-devel >= 2:2.18.0
-#BuildRequires:	gtk-doc >= 1.3
-BuildRequires:	gtk-webkit-devel >= 1.1.7
+BuildRequires:	gtk+2-devel >= 2:2.22.0
+BuildRequires:	gtk-webkit-devel >= 1.1.15
 BuildRequires:	intltool >= 0.40.0
 BuildRequires:	iso-codes >= 0.35
 BuildRequires:	libcanberra-gtk-devel >= 0.4
-BuildRequires:	libchamplain-devel >= 0.4
-BuildRequires:	libgnome-keyring-devel
+BuildRequires:	libchamplain-devel >= 0.8.0
+BuildRequires:	libgnome-keyring-devel >= 2.26.0
 BuildRequires:	libnotify-devel >= 0.4.4
 BuildRequires:	libtool
-BuildRequires:	libunique-devel
+BuildRequires:	libunique-devel >= 1.1.2
 BuildRequires:	libxml2-devel >= 1:2.6.28
-BuildRequires:	nautilus-sendto-devel >= 2.31.7
+BuildRequires:	nautilus-sendto-devel >= 2.32.0
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.311
 BuildRequires:	sed >= 4.0
-BuildRequires:	telepathy-farsight-devel
-BuildRequires:	telepathy-glib-devel >= 0.9.2
+BuildRequires:	telepathy-farsight-devel >= 0.0.14
+BuildRequires:	telepathy-glib-devel >= 0.12.0
 BuildRequires:	telepathy-logger-devel >= 0.1.5
-Requires(post,postun):	glib2 >= 1:2.25.11
+Requires(post,postun):	glib2 >= 1:2.26.0
 Requires(post,postun):	gtk+2 >= 2:2.12.0
 Requires(post,postun):	hicolor-icon-theme
+Requires:	telepathy-logger >= 0.1.5
 Requires:	telepathy-mission-control
 Suggests:	telepathy-butterfly
 Suggests:	telepathy-gabble
@@ -80,7 +81,7 @@ Summary:	Empathy support for sending files in Nautilus
 Summary(pl.UTF-8):	Wsparcie Empathy przy wysyłaniu plików z Nautilusa
 Group:		X11/Applications
 Requires:	%{name} = %{version}-%{release}
-Requires:	nautilus-sendto >= 2.28.1
+Requires:	nautilus-sendto >= 2.32.0
 
 %description -n nautilus-sendto-empathy
 Enables sending files from Nautilus to your Empathy contacts.
