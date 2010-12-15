@@ -2,7 +2,7 @@ Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
 Version:	2.32.1
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.32/%{name}-%{version}.tar.bz2
@@ -43,7 +43,7 @@ BuildRequires:	libxml2-devel >= 1:2.6.28
 BuildRequires:	nautilus-sendto-devel >= 2.32.0
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(find_lang) >= 1.23
-BuildRequires:	rpmbuild(macros) >= 1.311
+BuildRequires:	rpmbuild(macros) >= 1.592
 BuildRequires:	sed >= 4.0
 BuildRequires:	telepathy-farsight-devel >= 0.0.14
 BuildRequires:	telepathy-glib-devel >= 0.12.0
@@ -130,11 +130,11 @@ rm -f $RPM_BUILD_ROOT%{py_sitedir}/*.{la,a}
 rm -rf $RPM_BUILD_ROOT
 
 %post
-glib-compile-schemas %{_datadir}/glib-2.0/schemas
+%glib_compile_schemas
 %update_icon_cache hicolor
 
 %postun
-glib-compile-schemas %{_datadir}/glib-2.0/schemas
+%glib_compile_schemas
 %update_icon_cache hicolor
 
 %files -f %{name}.lang
