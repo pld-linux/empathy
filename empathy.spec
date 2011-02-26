@@ -1,12 +1,12 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	2.32.1
-Release:	3
+Version:	2.91.90
+Release:	1
 License:	GPL v2
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.32/%{name}-%{version}.tar.bz2
-# Source0-md5:	09e7d72cd58a5f776b5097e7d5596095
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.91/%{name}-%{version}.tar.bz2
+# Source0-md5:	c2454e8e3ce9e97ff150bc590ce67643
 Patch0:		configure.patch
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	GConf2-devel >= 2.26.0
@@ -19,13 +19,13 @@ BuildRequires:	docbook-dtd412-xml
 BuildRequires:	enchant-devel >= 1.2.0
 BuildRequires:	evolution-data-server-devel >= 2.24.0
 BuildRequires:	farsight2-devel
-BuildRequires:	folks-devel >= 0.1.5
+BuildRequires:	folks-devel >= 0.3.5
 BuildRequires:	geoclue-devel >= 0.11
 BuildRequires:	gettext-devel
 BuildRequires:	glib2-devel >= 1:2.26.0
 BuildRequires:	gnome-common >= 2.24.0
 BuildRequires:	gnome-doc-utils >= 0.18.0
-BuildRequires:	gnome-keyring-devel >= 2.26.0
+BuildRequires:	gnome-keyring-devel >= 2.29.4
 BuildRequires:	gnutls-devel >= 2.8.5
 BuildRequires:	gstreamer-devel
 BuildRequires:	gstreamer-plugins-base-devel
@@ -40,7 +40,7 @@ BuildRequires:	libnotify-devel >= 0.4.4
 BuildRequires:	libtool
 BuildRequires:	libunique-devel >= 1.1.2
 BuildRequires:	libxml2-devel >= 1:2.6.28
-BuildRequires:	nautilus-sendto-devel >= 2.32.0
+BuildRequires:	nautilus-sendto-devel >= 2.91.6
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.592
@@ -145,15 +145,17 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/empathy-debugger
 %attr(755,root,root) %{_libexecdir}/empathy-auth-client
 %attr(755,root,root) %{_libexecdir}/empathy-av
+%attr(755,root,root) %{_libexecdir}/empathy-chat
+%{_libdir}/control-center-1/panels/libempathy-accounts-panel.so
 %{_datadir}/%{name}
 %{_datadir}/GConf/gsettings/empathy.convert
-%{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.service
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.AudioVideo.service
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.Auth.service
+%{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.Chat.service
 %{_datadir}/glib-2.0/schemas/org.gnome.Empathy.gschema.xml
-%{_datadir}/telepathy/clients/Empathy.client
 %{_datadir}/telepathy/clients/Empathy.AudioVideo.client
 %{_datadir}/telepathy/clients/Empathy.Auth.client
+%{_datadir}/telepathy/clients/Empathy.Chat.client
 %{_iconsdir}/hicolor/*/apps/*
 %{_mandir}/man1/empathy*.1*
 %{_desktopdir}/*.desktop
