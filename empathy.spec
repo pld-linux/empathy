@@ -44,7 +44,6 @@ BuildRequires:	nautilus-sendto-devel >= 2.32.0
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.592
-BuildRequires:	sed >= 4.0
 BuildRequires:	telepathy-farsight-devel >= 0.0.14
 BuildRequires:	telepathy-glib-devel >= 0.12.0
 BuildRequires:	telepathy-logger-devel >= 0.1.5
@@ -78,23 +77,22 @@ jak to tylko możliwe.
 
 %package -n nautilus-sendto-empathy
 Summary:	Empathy support for sending files in Nautilus
-Summary(pl.UTF-8):	Wsparcie Empathy przy wysyłaniu plików z Nautilusa
+Summary(pl.UTF-8):	Obsługa Empathy przy wysyłaniu plików z Nautilusa
 Group:		X11/Applications
 Requires:	%{name} = %{version}-%{release}
 Requires:	nautilus-sendto >= 2.32.0
 
 %description -n nautilus-sendto-empathy
-Enables sending files from Nautilus to your Empathy contacts.
+This plugin enables sending files from Nautilus to your Empathy
+contacts.
 
 %description -n nautilus-sendto-empathy -l pl.UTF-8
-Pozwala na przesyłanie z Nautilusa plików do kontaktów Empathy.
+Ta wtyczka pozwala na przesyłanie z poziomu Nautilusa plików do
+kontaktów Empathy.
 
 %prep
 %setup -q
 %patch0 -p1
-
-rm po/en@shaw.po
-sed -i 's/^en@shaw//' po/LINGUAS
 
 %build
 %{__intltoolize}
@@ -121,8 +119,8 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT \
 	GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/nautilus-sendto/plugins/*.la
-rm -f $RPM_BUILD_ROOT%{py_sitedir}/*.{la,a}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/nautilus-sendto/plugins/*.la
+%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/*.{la,a}
 
 %find_lang %{name} --with-gnome --with-omf
 
