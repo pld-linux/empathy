@@ -150,6 +150,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.AudioVideo.service
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.Auth.service
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.Chat.service
+%{_datadir}/glib-2.0/schemas/org.gnome.Empathy.gschema.xml
 %{_datadir}/telepathy/clients/Empathy.Auth.client
 %{_datadir}/telepathy/clients/Empathy.Chat.client
 %{_datadir}/telepathy/clients/Empathy.AudioVideo.client
