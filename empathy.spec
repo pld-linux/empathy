@@ -1,12 +1,12 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	3.1.1
+Version:	3.1.2.1
 Release:	1
 License:	GPL v2+
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.1/%{name}-%{version}.tar.bz2
-# Source0-md5:	c85c8c367ac335891efab8147b636ea0
+# Source0-md5:	a333ba1df3d095ba3e7fc3c26a016b7e
 Patch0:		configure.patch
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	NetworkManager-devel >= 0.7.0
@@ -18,7 +18,7 @@ BuildRequires:	docbook-dtd412-xml
 BuildRequires:	enchant-devel >= 1.2.0
 BuildRequires:	evolution-data-server-devel >= 2.91.90
 BuildRequires:	farsight2-devel
-BuildRequires:	folks-devel >= 0.4.0
+BuildRequires:	folks-devel >= 0.5.1
 BuildRequires:	geoclue-devel >= 0.11
 BuildRequires:	gettext-devel
 BuildRequires:	glib2-devel >= 1:2.28.0
@@ -48,7 +48,7 @@ BuildRequires:	python-modules >= 2.3
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.592
 BuildRequires:	telepathy-farsight-devel >= 0.0.14
-BuildRequires:	telepathy-glib-devel >= 0.14.3
+BuildRequires:	telepathy-glib-devel >= 0.15.1
 BuildRequires:	telepathy-logger-devel >= 0.2.0
 Requires(post,postun):	glib2 >= 1:2.26.0
 Requires(post,postun):	gtk-update-icon-cache
@@ -149,11 +149,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/GConf/gsettings/empathy.convert
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.AudioVideo.service
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.Auth.service
+%{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.Call.service
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.Chat.service
 %{_datadir}/glib-2.0/schemas/org.gnome.Empathy.gschema.xml
-%{_datadir}/telepathy/clients/Empathy.Auth.client
-%{_datadir}/telepathy/clients/Empathy.Chat.client
 %{_datadir}/telepathy/clients/Empathy.AudioVideo.client
+%{_datadir}/telepathy/clients/Empathy.Auth.client
+%{_datadir}/telepathy/clients/Empathy.Call.client
+%{_datadir}/telepathy/clients/Empathy.Chat.client
 %{_iconsdir}/hicolor/*/apps/*
 %{_mandir}/man1/empathy*.1*
 %{_desktopdir}/*.desktop
