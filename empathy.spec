@@ -1,4 +1,4 @@
-Summary:	Very easy to use GNOME Telepathy client
+Summary:	High-level library and user-interface for Telepathy
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
 Version:	3.0.2
@@ -71,8 +71,11 @@ Conflicts:	glibc-misc < 6:2.7
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-Empathy aims at making Instant Messaging with Jabber as easy as
-possible.
+Instant messaging program supporting text, voice, video, file
+transfers and inter-application communication over many different
+protocols, including: AIM, MSN, Google Talk (Jabber/XMPP), Facebook,
+Yahoo!, Salut, Gadu-Gadu, Groupwise, ICQ and QQ. (Supported protocols
+depend on installed components.)
 
 %description -l pl.UTF-8
 Celem Empathy jest uczynienie komunikowania poprzez Jabbera tak łatwym
