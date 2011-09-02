@@ -1,13 +1,12 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	3.1.2.1
+Version:	3.1.90.1
 Release:	1
 License:	GPL v2+
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.1/%{name}-%{version}.tar.bz2
-# Source0-md5:	a333ba1df3d095ba3e7fc3c26a016b7e
-Patch0:		configure.patch
+# Source0-md5:	052a4b5b384306b95bb794f23c8a36f6
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	NetworkManager-devel >= 0.7.0
 BuildRequires:	autoconf >= 2.59
@@ -16,9 +15,9 @@ BuildRequires:	clutter-gtk-devel >= 0.90.3
 BuildRequires:	dbus-glib-devel >= 0.74
 BuildRequires:	docbook-dtd412-xml
 BuildRequires:	enchant-devel >= 1.2.0
-BuildRequires:	evolution-data-server-devel >= 2.91.90
+BuildRequires:	evolution-data-server-devel >= 3.1.90
 BuildRequires:	farsight2-devel
-BuildRequires:	folks-devel >= 0.5.1
+BuildRequires:	folks-devel >= 0.6.0
 BuildRequires:	geoclue-devel >= 0.11
 BuildRequires:	gettext-devel
 BuildRequires:	glib2-devel >= 1:2.28.0
@@ -47,8 +46,8 @@ BuildRequires:	python >= 2.3
 BuildRequires:	python-modules >= 2.3
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.592
-BuildRequires:	telepathy-farsight-devel >= 0.0.14
-BuildRequires:	telepathy-glib-devel >= 0.15.1
+BuildRequires:	telepathy-farstream-devel
+BuildRequires:	telepathy-glib-devel >= 0.15.3
 BuildRequires:	telepathy-logger-devel >= 0.2.0
 Requires(post,postun):	glib2 >= 1:2.26.0
 Requires(post,postun):	gtk-update-icon-cache
@@ -95,7 +94,6 @@ kontaktów Empathy.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %{__intltoolize}
@@ -106,8 +104,10 @@ kontaktów Empathy.
 %{__automake}
 %configure \
 	--with-connectivity=nm \
+	--disable-control-center-embedding \
 	--disable-silent-rules \
 	--disable-static \
+	--enable-call \
 	--enable-location \
 	--enable-nautilus-sendto
 
@@ -119,8 +119,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/nautilus-sendto/plugins/*.la \
-	$RPM_BUILD_ROOT%{_libdir}/control-center-1/panels/*.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/nautilus-sendto/plugins/*.la
 
 %find_lang %{name} --with-gnome --with-omf
 
@@ -143,19 +142,21 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/empathy-debugger
 %attr(755,root,root) %{_libexecdir}/empathy-auth-client
 %attr(755,root,root) %{_libexecdir}/empathy-av
+%attr(755,root,root) %{_libexecdir}/empathy-call
 %attr(755,root,root) %{_libexecdir}/empathy-chat
-%{_libdir}/control-center-1/panels/libempathy-accounts-panel.so
 %{_datadir}/%{name}
 %{_datadir}/GConf/gsettings/empathy.convert
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.AudioVideo.service
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.Auth.service
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.Call.service
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.Chat.service
+%{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.FileTransfer.service
 %{_datadir}/glib-2.0/schemas/org.gnome.Empathy.gschema.xml
 %{_datadir}/telepathy/clients/Empathy.AudioVideo.client
 %{_datadir}/telepathy/clients/Empathy.Auth.client
 %{_datadir}/telepathy/clients/Empathy.Call.client
 %{_datadir}/telepathy/clients/Empathy.Chat.client
+%{_datadir}/telepathy/clients/Empathy.FileTransfer.client
 %{_iconsdir}/hicolor/*/apps/*
 %{_mandir}/man1/empathy*.1*
 %{_desktopdir}/*.desktop
