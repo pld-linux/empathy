@@ -5,8 +5,8 @@ Version:	3.1.90.1
 Release:	1
 License:	GPL v2+
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.1/%{name}-%{version}.tar.bz2
-# Source0-md5:	052a4b5b384306b95bb794f23c8a36f6
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.1/%{name}-%{version}.tar.xz
+# Source0-md5:	7a63591b04feb41c0569d20b1426c151
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	NetworkManager-devel >= 0.7.0
 BuildRequires:	autoconf >= 2.59
@@ -48,7 +48,7 @@ BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.592
 BuildRequires:	telepathy-farstream-devel
 BuildRequires:	telepathy-glib-devel >= 0.15.3
-BuildRequires:	telepathy-logger-devel >= 0.2.0
+BuildRequires:	telepathy-logger-devel >= 0.2.10-2
 Requires(post,postun):	glib2 >= 1:2.26.0
 Requires(post,postun):	gtk-update-icon-cache
 Requires(post,postun):	hicolor-icon-theme
@@ -102,14 +102,22 @@ kontaktów Empathy.
 %{__autoconf}
 %{__autoheader}
 %{__automake}
+# missing geocode-glib in pld
 %configure \
 	--with-connectivity=nm \
-	--disable-control-center-embedding \
+	--with-cheese \
+	--with-eds \
 	--disable-silent-rules \
 	--disable-static \
+	--disable-geocode \
 	--enable-call \
+	--enable-call-logs \
+	--enable-control-center-embedding \
+	--enable-gudev \
 	--enable-location \
-	--enable-nautilus-sendto
+	--enable-map \
+	--enable-nautilus-sendto \
+	--enable-spell
 
 %{__make}
 
@@ -120,6 +128,7 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
 
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/nautilus-sendto/plugins/*.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/control-center-1/panels/*.la
 
 %find_lang %{name} --with-gnome --with-omf
 
@@ -140,6 +149,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/empathy
 %attr(755,root,root) %{_bindir}/empathy-accounts
 %attr(755,root,root) %{_bindir}/empathy-debugger
+%attr(755,root,root) %{_libdir}/control-center-1/panels/libempathy-accounts-panel.so
 %attr(755,root,root) %{_libexecdir}/empathy-auth-client
 %attr(755,root,root) %{_libexecdir}/empathy-av
 %attr(755,root,root) %{_libexecdir}/empathy-call
