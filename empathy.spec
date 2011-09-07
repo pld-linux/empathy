@@ -1,12 +1,12 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	3.1.90.1
+Version:	3.1.91
 Release:	1
 License:	GPL v2+
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.1/%{name}-%{version}.tar.xz
-# Source0-md5:	7a63591b04feb41c0569d20b1426c151
+# Source0-md5:	f1ce6bd6fbf22972e9de6463e043db41
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	NetworkManager-devel >= 0.7.0
 BuildRequires:	autoconf >= 2.59
@@ -22,9 +22,9 @@ BuildRequires:	geoclue-devel >= 0.11
 BuildRequires:	gettext-devel
 BuildRequires:	glib2-devel >= 1:2.28.0
 BuildRequires:	gnome-common >= 2.24.0
-BuildRequires:	gnome-control-center-devel >= 2.91.90
 BuildRequires:	gnome-doc-utils >= 0.18.0
 BuildRequires:	gnome-keyring-devel >= 2.91.4
+BuildRequires:	gnome-online-accounts-devel
 BuildRequires:	gnutls-devel >= 2.8.5
 BuildRequires:	gsettings-desktop-schemas-devel
 BuildRequires:	gstreamer-devel
@@ -109,10 +109,10 @@ kontaktów Empathy.
 	--with-eds \
 	--disable-silent-rules \
 	--disable-static \
+	--disable-control-center-embedding \
 	--disable-geocode \
 	--enable-call \
 	--enable-call-logs \
-	--enable-control-center-embedding \
 	--enable-gudev \
 	--enable-location \
 	--enable-map \
@@ -128,7 +128,8 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
 
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/nautilus-sendto/plugins/*.la
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/control-center-1/panels/*.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/mission-control-plugins.0/*.la
+#%{__rm} $RPM_BUILD_ROOT%{_libdir}/control-center-1/panels/*.la
 
 %find_lang %{name} --with-gnome --with-omf
 
@@ -149,11 +150,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/empathy
 %attr(755,root,root) %{_bindir}/empathy-accounts
 %attr(755,root,root) %{_bindir}/empathy-debugger
-%attr(755,root,root) %{_libdir}/control-center-1/panels/libempathy-accounts-panel.so
+#%attr(755,root,root) %{_libdir}/control-center-1/panels/libempathy-accounts-panel.so
 %attr(755,root,root) %{_libexecdir}/empathy-auth-client
 %attr(755,root,root) %{_libexecdir}/empathy-av
 %attr(755,root,root) %{_libexecdir}/empathy-call
 %attr(755,root,root) %{_libexecdir}/empathy-chat
+%attr(755,root,root) %{_libdir}/mission-control-plugins.0/mcp-account-manager-goa.so
 %{_datadir}/%{name}
 %{_datadir}/GConf/gsettings/empathy.convert
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.AudioVideo.service
