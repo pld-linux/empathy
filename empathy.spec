@@ -11,13 +11,14 @@ URL:		http://live.gnome.org/Empathy
 BuildRequires:	NetworkManager-devel >= 0.7.0
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake >= 1:1.9
+BuildRequires:	clutter-devel >= 1.7.14
 BuildRequires:	clutter-gtk-devel >= 0.90.3
 BuildRequires:	dbus-glib-devel >= 0.74
 BuildRequires:	docbook-dtd412-xml
 BuildRequires:	enchant-devel >= 1.2.0
 BuildRequires:	evolution-data-server-devel >= 3.1.90
 BuildRequires:	farsight2-devel
-BuildRequires:	folks-devel >= 0.6.0
+BuildRequires:	folks-devel >= 0.6.2
 BuildRequires:	geoclue-devel >= 0.11
 BuildRequires:	gettext-devel
 BuildRequires:	glib2-devel >= 1:2.28.0
