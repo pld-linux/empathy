@@ -2,7 +2,7 @@ Summary:	High-level library and user-interface for Telepathy
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
 Version:	3.2.0
-Release:	4
+Release:	5
 License:	GPL v2+
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.2/%{name}-%{version}.tar.xz
@@ -52,6 +52,7 @@ BuildRequires:	telepathy-farsight-devel >= 0.0.14
 BuildRequires:	telepathy-farstream-devel
 BuildRequires:	telepathy-glib-devel >= 0.15.3
 BuildRequires:	telepathy-logger-devel >= 0.2.10-2
+BuildRequires:	telepathy-mission-control-devel >= 5.9.1
 Requires(post,postun):	glib2 >= 1:2.26.0
 Requires(post,postun):	gtk-update-icon-cache
 Requires(post,postun):	hicolor-icon-theme
