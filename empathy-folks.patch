@@ -1,0 +1,1090 @@
+diff -urN empathy-2.32.1.orig//configure.ac empathy-2.32.1/configure.ac
+--- empathy-2.32.1.orig//configure.ac	2010-11-15 13:33:45.000000000 +0000
++++ empathy-2.32.1/configure.ac	2011-11-03 18:15:12.848211281 +0000
+@@ -31,9 +31,9 @@
+ # Minimal version required
+ 
+ # Hardp deps
+-FOLKS_REQUIRED=0.1.15
++FOLKS_REQUIRED=0.4.0
+ GCONF_REQUIRED=1.2.0
+-GLIB_REQUIRED=2.25.9
++GLIB_REQUIRED=2.27.2
+ GNUTLS_REQUIRED=2.8.5
+ GTK_REQUIRED=2.22.0
+ KEYRING_REQUIRED=2.26.0
+diff -urN empathy-2.32.1.orig//libempathy/empathy-contact.c empathy-2.32.1/libempathy/empathy-contact.c
+--- empathy-2.32.1.orig//libempathy/empathy-contact.c	2010-11-15 13:20:19.000000000 +0000
++++ empathy-2.32.1/libempathy/empathy-contact.c	2011-11-03 18:15:12.858210227 +0000
+@@ -484,8 +484,8 @@
+ 
+   if (priv->persona != NULL)
+     {
+-      folks_presence_set_presence_message (FOLKS_PRESENCE (priv->persona),
+-          message);
++      folks_presence_details_set_presence_message (
++          FOLKS_PRESENCE_DETAILS (priv->persona), message);
+     }
+ }
+ 
+@@ -703,12 +703,12 @@
+ 
+   /* Set the alias on the persona if possible */
+   persona = empathy_contact_get_persona (contact);
+-  if (persona != NULL && FOLKS_IS_ALIAS (persona))
++  if (persona != NULL && FOLKS_IS_ALIAS_DETAILS (persona))
+     {
+       DEBUG ("Setting alias for contact %s to %s",
+           empathy_contact_get_id (contact), alias);
+ 
+-      folks_alias_set_alias (FOLKS_ALIAS (persona), alias);
++      folks_alias_details_set_alias (FOLKS_ALIAS_DETAILS (persona), alias);
+     }
+ 
+   if (tp_strdiff (alias, priv->alias))
+@@ -726,10 +726,10 @@
+     GAsyncResult *result,
+     gpointer user_data)
+ {
+-  FolksGroups *groups = FOLKS_GROUPS (source);
++  FolksGroupDetails *group_details = FOLKS_GROUP_DETAILS (source);
+   GError *error = NULL;
+ 
+-  folks_groups_change_group_finish (groups, result, &error);
++  folks_group_details_change_group_finish (group_details, result, &error);
+   if (error != NULL)
+     {
+       g_warning ("failed to change group: %s", error->message);
+@@ -753,9 +753,9 @@
+   persona = empathy_contact_get_persona (contact);
+   if (persona != NULL)
+     {
+-      if (FOLKS_IS_GROUPS (persona))
+-        folks_groups_change_group (FOLKS_GROUPS (persona), group, is_member,
+-          groups_change_group_cb, contact);
++      if (FOLKS_IS_GROUP_DETAILS (persona))
++        folks_group_details_change_group (FOLKS_GROUP_DETAILS (persona), group,
++            is_member, groups_change_group_cb, contact);
+       return;
+     }
+ 
+@@ -918,7 +918,8 @@
+   /* Set the persona's groups */
+   if (priv->groups != NULL)
+     {
+-      folks_groups_set_groups (FOLKS_GROUPS (persona), priv->groups);
++      folks_group_details_set_groups (FOLKS_GROUP_DETAILS (persona),
++          priv->groups);
+       g_hash_table_destroy (priv->groups);
+       priv->groups = NULL;
+     }
+@@ -965,7 +966,10 @@
+   priv = GET_PRIV (contact);
+ 
+   if (priv->persona != NULL)
+-    return folks_presence_get_presence_message (FOLKS_PRESENCE (priv->persona));
++    {
++      return folks_presence_details_get_presence_message (
++          FOLKS_PRESENCE_DETAILS (priv->persona));
++    }
+ 
+   return NULL;
+ }
+@@ -1740,15 +1744,16 @@
+ presence_cmp_func (EmpathyContact *a,
+     EmpathyContact *b)
+ {
+-  FolksPresence *presence_a, *presence_b;
++  FolksPresenceDetails *presence_a, *presence_b;
+ 
+-  presence_a = FOLKS_PRESENCE (empathy_contact_get_persona (a));
+-  presence_b = FOLKS_PRESENCE (empathy_contact_get_persona (b));
++  presence_a = FOLKS_PRESENCE_DETAILS (empathy_contact_get_persona (a));
++  presence_b = FOLKS_PRESENCE_DETAILS (empathy_contact_get_persona (b));
+ 
+   /* We negate the result because we're sorting in reverse order (i.e. such that
+    * the Personas with the highest presence are at the beginning of the list. */
+-  return -folks_presence_typecmp (folks_presence_get_presence_type (presence_a),
+-      folks_presence_get_presence_type (presence_b));
++  return -folks_presence_details_typecmp (
++      folks_presence_details_get_presence_type (presence_a),
++      folks_presence_details_get_presence_type (presence_b));
+ }
+ 
+ static gint
+diff -urN empathy-2.32.1.orig//libempathy/empathy-individual-manager.c empathy-2.32.1/libempathy/empathy-individual-manager.c
+--- empathy-2.32.1.orig//libempathy/empathy-individual-manager.c	2010-11-15 13:20:19.000000000 +0000
++++ empathy-2.32.1/libempathy/empathy-individual-manager.c	2011-11-03 18:15:12.859210018 +0000
+@@ -85,8 +85,8 @@
+     GParamSpec *pspec,
+     EmpathyIndividualManager *self)
+ {
+-  gboolean is_favourite = folks_favourite_get_is_favourite (
+-      FOLKS_FAVOURITE (individual));
++  gboolean is_favourite = folks_favourite_details_get_is_favourite (
++      FOLKS_FAVOURITE_DETAILS (individual));
+   g_signal_emit (self, signals[FAVOURITES_CHANGED], 0, individual,
+       is_favourite);
+ }
+@@ -388,7 +388,10 @@
+     EmpathyContact *contact)
+ {
+   EmpathyIndividualManagerPriv *priv;
+-  GHashTable* details;
++  FolksBackendStore *backend_store;
++  FolksBackend *backend;
++  FolksPersonaStore *persona_store;
++  GHashTable* details, *persona_stores;
+   TpAccount *account;
+   const gchar *store_id;
+ 
+@@ -407,15 +410,41 @@
+   account = empathy_contact_get_account (contact);
+   store_id = tp_proxy_get_object_path (TP_PROXY (account));
+ 
++  /* Get the persona store to use */
++  backend_store = folks_backend_store_dup ();
++  backend =
++      folks_backend_store_dup_backend_by_name (backend_store, "telepathy");
++
++  if (backend == NULL)
++    {
++      g_warning ("Failed to add individual from contact: couldn't get "
++          "'telepathy' backend");
++      goto finish;
++    }
++
++  persona_stores = folks_backend_get_persona_stores (backend);
++  persona_store = g_hash_table_lookup (persona_stores, store_id);
++
++  if (persona_store == NULL)
++    {
++      g_warning ("Failed to add individual from contact: couldn't get persona "
++          "store '%s'", store_id);
++      goto finish;
++    }
++
+   details = tp_asv_new (
+       "contact", G_TYPE_STRING, empathy_contact_get_id (contact),
+       NULL);
+ 
+   folks_individual_aggregator_add_persona_from_details (
+-      priv->aggregator, NULL, "telepathy", store_id, details,
++      priv->aggregator, NULL, persona_store, details,
+       aggregator_add_persona_from_details_cb, contact);
+ 
+   g_hash_table_destroy (details);
++
++finish:
++  tp_clear_object (&backend);
++  tp_clear_object (&backend_store);
+ }
+ 
+ static void
+@@ -453,7 +482,7 @@
+ 
+   DEBUG ("removing individual %s (%s)",
+       folks_individual_get_id (individual),
+-      folks_individual_get_alias (individual));
++      folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (individual)));
+ 
+   folks_individual_aggregator_remove_individual (priv->aggregator, individual,
+       aggregator_remove_individual_cb, self);
+@@ -464,10 +493,10 @@
+     GAsyncResult *result,
+     gpointer user_data)
+ {
+-  FolksGroups *groups = FOLKS_GROUPS (source);
++  FolksGroupDetails *group_details = FOLKS_GROUP_DETAILS (source);
+   GError *error = NULL;
+ 
+-  folks_groups_change_group_finish (groups, result, &error);
++  folks_group_details_change_group_finish (group_details, result, &error);
+   if (error != NULL)
+     {
+       g_warning ("failed to change group: %s", error->message);
+@@ -480,8 +509,8 @@
+     FolksIndividual *individual,
+     const gchar *group)
+ {
+-  folks_groups_change_group (FOLKS_GROUPS (individual), group, FALSE,
+-      groups_change_group_cb, NULL);
++  folks_group_details_change_group (FOLKS_GROUP_DETAILS (individual), group,
++      FALSE, groups_change_group_cb, NULL);
+ }
+ 
+ void
+diff -urN empathy-2.32.1.orig//libempathy/empathy-utils.c empathy-2.32.1/libempathy/empathy-utils.c
+--- empathy-2.32.1.orig//libempathy/empathy-utils.c	2010-11-15 13:20:19.000000000 +0000
++++ empathy-2.32.1/libempathy/empathy-utils.c	2011-11-03 18:15:12.859210018 +0000
+@@ -739,7 +739,7 @@
+ 
+ TpChannelGroupChangeReason
+ tp_channel_group_change_reason_from_folks_groups_change_reason (
+-    FolksGroupsChangeReason reason)
++    FolksGroupDetailsChangeReason reason)
+ {
+   return (TpChannelGroupChangeReason) reason;
+ }
+diff -urN empathy-2.32.1.orig//libempathy/empathy-utils.h empathy-2.32.1/libempathy/empathy-utils.h
+--- empathy-2.32.1.orig//libempathy/empathy-utils.h	2010-11-15 13:20:19.000000000 +0000
++++ empathy-2.32.1/libempathy/empathy-utils.h	2011-11-03 18:15:59.993147818 +0000
+@@ -97,7 +97,7 @@
+ TpConnectionPresenceType empathy_folks_presence_type_to_tp (FolksPresenceType type);
+ gboolean empathy_folks_individual_contains_contact (FolksIndividual *individual);
+ EmpathyContact * empathy_contact_dup_from_folks_individual (FolksIndividual *individual);
+-TpChannelGroupChangeReason tp_channel_group_change_reason_from_folks_groups_change_reason (FolksGroupsChangeReason reason);
++TpChannelGroupChangeReason tp_channel_group_change_reason_from_folks_groups_change_reason (FolksGroupDetailsChangeReason reason);
+ 
+ gchar * empathy_get_x509_certificate_hostname (gnutls_x509_crt_t cert);
+ 
+diff -urN empathy-2.32.1.orig//libempathy-gtk/empathy-contact-widget.c empathy-2.32.1/libempathy-gtk/empathy-contact-widget.c
+--- empathy-2.32.1.orig//libempathy-gtk/empathy-contact-widget.c	2010-11-15 13:20:18.000000000 +0000
++++ empathy-2.32.1/libempathy-gtk/empathy-contact-widget.c	2011-11-03 18:15:12.849210718 +0000
+@@ -586,11 +586,11 @@
+       FolksPersona *persona =
+           empathy_contact_get_persona (information->contact);
+ 
+-      if (FOLKS_IS_GROUPS (persona))
++      if (FOLKS_IS_GROUP_DETAILS (persona))
+         {
+-          empathy_groups_widget_set_groupable (
++          empathy_groups_widget_set_group_details (
+               EMPATHY_GROUPS_WIDGET (information->groups_widget),
+-              FOLKS_GROUPS (persona));
++              FOLKS_GROUP_DETAILS (persona));
+           gtk_widget_show (information->groups_widget);
+ 
+           return;
+@@ -1284,10 +1284,10 @@
+           FolksPersona *persona = empathy_contact_get_persona (
+               information->contact);
+ 
+-          if (persona != NULL && FOLKS_IS_FAVOURITE (persona))
++          if (persona != NULL && FOLKS_IS_FAVOURITE_DETAILS (persona))
+             {
+-              gboolean is_favourite = folks_favourite_get_is_favourite (
+-                  FOLKS_FAVOURITE (persona));
++              gboolean is_favourite = folks_favourite_details_get_is_favourite (
++                  FOLKS_FAVOURITE_DETAILS (persona));
+               contact_widget_favourites_changed_cb (information->manager,
+                   information->contact, is_favourite, information);
+             }
+@@ -1418,10 +1418,11 @@
+ {
+   FolksPersona *persona = empathy_contact_get_persona (information->contact);
+ 
+-  if (persona != NULL && FOLKS_IS_FAVOURITE (persona))
++  if (persona != NULL && FOLKS_IS_FAVOURITE_DETAILS (persona))
+     {
+       gboolean active = gtk_toggle_button_get_active (button);
+-      folks_favourite_set_is_favourite (FOLKS_FAVOURITE (persona), active);
++      folks_favourite_details_set_is_favourite (
++          FOLKS_FAVOURITE_DETAILS (persona), active);
+     }
+ }
+ 
+diff -urN empathy-2.32.1.orig//libempathy-gtk/empathy-groups-widget.c empathy-2.32.1/libempathy-gtk/empathy-groups-widget.c
+--- empathy-2.32.1.orig//libempathy-gtk/empathy-groups-widget.c	2010-11-15 13:20:18.000000000 +0000
++++ empathy-2.32.1/libempathy-gtk/empathy-groups-widget.c	2011-11-03 18:15:12.850057853 +0000
+@@ -40,20 +40,20 @@
+ /**
+  * SECTION:empathy-groups-widget
+  * @title:EmpathyGroupsWidget
+- * @short_description: A widget used to edit the groups of a #FolksGroups
++ * @short_description: A widget used to edit the groups of a #FolksGroupDetails
+  * @include: libempathy-gtk/empathy-groups-widget.h
+  *
+- * #EmpathyGroupsWidget is a widget which lists the groups of a #FolksGroups
+- * (i.e. a #FolksPersona or a #FolksIndividual) and allows them to be added and
+- * removed.
++ * #EmpathyGroupsWidget is a widget which lists the groups of a
++ * #FolksGroupDetails (i.e. a #FolksPersona or a #FolksIndividual) and allows
++ * them to be added and removed.
+  */
+ 
+ /**
+  * EmpathyGroupsWidget:
+  * @parent: parent object
+  *
+- * Widget which displays and allows editing of the groups of a #FolksGroups
+- * (i.e. a #FolksPersona or #FolksIndividual).
++ * Widget which displays and allows editing of the groups of a
++ * #FolksGroupDetails (i.e. a #FolksPersona or #FolksIndividual).
+  */
+ 
+ /* Delay before updating the widget when the id entry changed (seconds) */
+@@ -64,7 +64,7 @@
+ typedef struct
+ {
+   /* The object we're actually changing the groups of */
+-  FolksGroups *groupable; /* owned */
++  FolksGroupDetails *group_details; /* owned */
+   GtkListStore *group_store; /* owned */
+ 
+   GtkWidget *add_group_entry; /* child widget */
+@@ -72,7 +72,7 @@
+ } EmpathyGroupsWidgetPriv;
+ 
+ enum {
+-  PROP_GROUPABLE = 1,
++  PROP_GROUP_DETAILS = 1,
+ };
+ 
+ enum {
+@@ -165,8 +165,8 @@
+       EMPATHY_CONTACT_LIST (manager));
+   g_object_unref (manager);
+ 
+-  /* Get the list of groups that this #FolksGroups is currently in */
+-  my_groups = folks_groups_get_groups (priv->groupable);
++  /* Get the list of groups that this #FolksGroupDetails is currently in */
++  my_groups = folks_group_details_get_groups (priv->group_details);
+ 
+   for (l = all_groups; l != NULL; l = l->next)
+     {
+@@ -217,13 +217,13 @@
+ }
+ 
+ static void
+-change_group_cb (FolksGroups *groupable,
++change_group_cb (FolksGroupDetails *group_details,
+     GAsyncResult *async_result,
+     EmpathyGroupsWidget *self)
+ {
+   GError *error = NULL;
+ 
+-  folks_groups_change_group_finish (groupable, async_result, &error);
++  folks_group_details_change_group_finish (group_details, async_result, &error);
+ 
+   if (error != NULL)
+     {
+@@ -248,7 +248,7 @@
+       COL_ENABLED, TRUE,
+       -1);
+ 
+-  folks_groups_change_group (priv->groupable, group, TRUE,
++  folks_group_details_change_group (priv->group_details, group, TRUE,
+       (GAsyncReadyCallback) change_group_cb, self);
+ }
+ 
+@@ -280,15 +280,15 @@
+ 
+   if (group != NULL)
+     {
+-      folks_groups_change_group (priv->groupable, group, !was_enabled,
+-          (GAsyncReadyCallback) change_group_cb, self);
++      folks_group_details_change_group (priv->group_details, group,
++          !was_enabled, (GAsyncReadyCallback) change_group_cb, self);
+       g_free (group);
+     }
+ }
+ 
+ 
+ static void
+-groupable_group_changed_cb (FolksGroups *groups,
++group_details_group_changed_cb (FolksGroupDetails *groups,
+     const gchar *group,
+     gboolean is_member,
+     EmpathyGroupsWidget *self)
+@@ -452,8 +452,8 @@
+ 
+   switch (param_id)
+     {
+-      case PROP_GROUPABLE:
+-        g_value_set_object (value, priv->groupable);
++      case PROP_GROUP_DETAILS:
++        g_value_set_object (value, priv->group_details);
+         break;
+       default:
+         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+@@ -473,8 +473,8 @@
+ 
+   switch (param_id)
+     {
+-      case PROP_GROUPABLE:
+-        empathy_groups_widget_set_groupable (EMPATHY_GROUPS_WIDGET (object),
++      case PROP_GROUP_DETAILS:
++        empathy_groups_widget_set_group_details (EMPATHY_GROUPS_WIDGET (object),
+             g_value_get_object (value));
+         break;
+       default:
+@@ -488,7 +488,8 @@
+ {
+   EmpathyGroupsWidgetPriv *priv = GET_PRIV (object);
+ 
+-  empathy_groups_widget_set_groupable (EMPATHY_GROUPS_WIDGET (object), NULL);
++  empathy_groups_widget_set_group_details (EMPATHY_GROUPS_WIDGET (object),
++      NULL);
+   tp_clear_object (&priv->group_store);
+ 
+   G_OBJECT_CLASS (empathy_groups_widget_parent_class)->dispose (object);
+@@ -504,16 +505,16 @@
+   object_class->dispose = dispose;
+ 
+   /**
+-   * EmpathyGroupsWidget:groupable:
++   * EmpathyGroupsWidget:group_details:
+    *
+-   * The #FolksGroups whose group membership is to be edited by the
++   * The #FolksGroupDetails whose group membership is to be edited by the
+    * #EmpathyGroupsWidget.
+    */
+-  g_object_class_install_property (object_class, PROP_GROUPABLE,
+-      g_param_spec_object ("groupable",
+-          "Groupable",
+-          "The #FolksGroups whose groups are being edited.",
+-          FOLKS_TYPE_GROUPS,
++  g_object_class_install_property (object_class, PROP_GROUP_DETAILS,
++      g_param_spec_object ("group-details",
++          "Group Details",
++          "The #FolksGroupDetails whose groups are being edited.",
++          FOLKS_TYPE_GROUP_DETAILS,
+           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+ 
+   g_type_class_add_private (object_class, sizeof (EmpathyGroupsWidgetPriv));
+@@ -521,80 +522,83 @@
+ 
+ /**
+  * empathy_groups_widget_new:
+- * @groupable: a #FolksGroups, or %NULL
++ * @group_details: a #FolksGroupDetails, or %NULL
+  *
+  * Creates a new #EmpathyGroupsWidget to edit the groups of the given
+- * @groupable.
++ * @group_details.
+  *
+  * Return value: a new #EmpathyGroupsWidget
+  */
+ GtkWidget *
+-empathy_groups_widget_new (FolksGroups *groupable)
++empathy_groups_widget_new (FolksGroupDetails *group_details)
+ {
+-  g_return_val_if_fail (groupable == NULL || FOLKS_IS_GROUPS (groupable),
++  g_return_val_if_fail (
++      group_details == NULL || FOLKS_IS_GROUP_DETAILS (group_details),
+       NULL);
+ 
+   return GTK_WIDGET (g_object_new (EMPATHY_TYPE_GROUPS_WIDGET,
+-      "groupable", groupable,
++      "group-details", group_details,
+       NULL));
+ }
+ 
+ /**
+- * empathy_groups_widget_get_groupable:
++ * empathy_groups_widget_get_group_details:
+  * @self: an #EmpathyGroupsWidget
+  *
+- * Get the #FolksGroups whose group membership is being edited by the
++ * Get the #FolksGroupDetails whose group membership is being edited by the
+  * #EmpathyGroupsWidget.
+  *
+- * Returns: the #FolksGroups associated with @widget, or %NULL
++ * Returns: the #FolksGroupDetails associated with @widget, or %NULL
+  */
+-FolksGroups *
+-empathy_groups_widget_get_groupable (EmpathyGroupsWidget *self)
++FolksGroupDetails *
++empathy_groups_widget_get_group_details (EmpathyGroupsWidget *self)
+ {
+   g_return_val_if_fail (EMPATHY_IS_GROUPS_WIDGET (self), NULL);
+ 
+-  return GET_PRIV (self)->groupable;
++  return GET_PRIV (self)->group_details;
+ }
+ 
+ /**
+- * empathy_groups_widget_set_groupable:
++ * empathy_groups_widget_set_group_details:
+  * @self: an #EmpathyGroupsWidget
+- * @groupable: the #FolksGroups whose membership is to be edited, or %NULL
++ * @group_details: the #FolksGroupDetails whose membership is to be edited, or
++ * %NULL
+  *
+- * Change the #FolksGroups whose group membership is to be edited by the
++ * Change the #FolksGroupDetails whose group membership is to be edited by the
+  * #EmpathyGroupsWidget.
+  */
+ void
+-empathy_groups_widget_set_groupable (EmpathyGroupsWidget *self,
+-    FolksGroups *groupable)
++empathy_groups_widget_set_group_details (EmpathyGroupsWidget *self,
++    FolksGroupDetails *group_details)
+ {
+   EmpathyGroupsWidgetPriv *priv;
+ 
+   g_return_if_fail (EMPATHY_IS_GROUPS_WIDGET (self));
+-  g_return_if_fail (groupable == NULL || FOLKS_IS_GROUPS (groupable));
++  g_return_if_fail (
++      group_details == NULL || FOLKS_IS_GROUP_DETAILS (group_details));
+ 
+   priv = GET_PRIV (self);
+ 
+-  if (groupable == priv->groupable)
++  if (group_details == priv->group_details)
+     return;
+ 
+-  if (priv->groupable != NULL)
++  if (priv->group_details != NULL)
+     {
+-      g_signal_handlers_disconnect_by_func (priv->groupable,
+-          groupable_group_changed_cb, self);
++      g_signal_handlers_disconnect_by_func (priv->group_details,
++          group_details_group_changed_cb, self);
+     }
+ 
+-  tp_clear_object (&priv->groupable);
++  tp_clear_object (&priv->group_details);
+ 
+-  if (groupable != NULL)
++  if (group_details != NULL)
+     {
+-      priv->groupable = g_object_ref (groupable);
++      priv->group_details = g_object_ref (group_details);
+ 
+-      g_signal_connect (priv->groupable, "group-changed",
+-          (GCallback) groupable_group_changed_cb, self);
++      g_signal_connect (priv->group_details, "group-changed",
++          (GCallback) group_details_group_changed_cb, self);
+ 
+       populate_data (self);
+     }
+ 
+-  g_object_notify (G_OBJECT (self), "groupable");
++  g_object_notify (G_OBJECT (self), "group-details");
+ }
+diff -urN empathy-2.32.1.orig//libempathy-gtk/empathy-groups-widget.h empathy-2.32.1/libempathy-gtk/empathy-groups-widget.h
+--- empathy-2.32.1.orig//libempathy-gtk/empathy-groups-widget.h	2010-11-15 13:20:18.000000000 +0000
++++ empathy-2.32.1/libempathy-gtk/empathy-groups-widget.h	2011-11-03 18:15:12.850057853 +0000
+@@ -54,12 +54,12 @@
+ 
+ GType empathy_groups_widget_get_type (void) G_GNUC_CONST;
+ 
+-GtkWidget * empathy_groups_widget_new (FolksGroups *groupable);
++GtkWidget * empathy_groups_widget_new (FolksGroupDetails *group_details);
+ 
+-FolksGroups * empathy_groups_widget_get_groupable (
++FolksGroupDetails * empathy_groups_widget_get_group_details (
+     EmpathyGroupsWidget *self);
+-void empathy_groups_widget_set_groupable (EmpathyGroupsWidget *self,
+-    FolksGroups *groupable);
++void empathy_groups_widget_set_group_details (EmpathyGroupsWidget *self,
++    FolksGroupDetails *group_details);
+ 
+ G_END_DECLS
+ 
+diff -urN empathy-2.32.1.orig//libempathy-gtk/empathy-individual-information-dialog.c empathy-2.32.1/libempathy-gtk/empathy-individual-information-dialog.c
+--- empathy-2.32.1.orig//libempathy-gtk/empathy-individual-information-dialog.c	2010-11-15 13:20:18.000000000 +0000
++++ empathy-2.32.1/libempathy-gtk/empathy-individual-information-dialog.c	2011-11-03 18:15:12.851211959 +0000
+@@ -180,7 +180,7 @@
+ 
+       /* Update the UI */
+       gtk_window_set_title (GTK_WINDOW (dialog),
+-          folks_individual_get_alias (individual));
++          folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (individual)));
+       empathy_individual_widget_set_individual (
+           EMPATHY_INDIVIDUAL_WIDGET (priv->individual_widget), individual);
+       set_label_visibility (dialog);
+diff -urN empathy-2.32.1.orig//libempathy-gtk/empathy-individual-menu.c empathy-2.32.1/libempathy-gtk/empathy-individual-menu.c
+--- empathy-2.32.1.orig//libempathy-gtk/empathy-individual-menu.c	2010-11-15 13:20:19.000000000 +0000
++++ empathy-2.32.1/libempathy-gtk/empathy-individual-menu.c	2011-11-03 18:15:12.852210413 +0000
+@@ -749,7 +749,8 @@
+ favourite_menu_item_toggled_cb (GtkCheckMenuItem *item,
+   FolksIndividual *individual)
+ {
+-  folks_favourite_set_is_favourite (FOLKS_FAVOURITE (individual),
++  folks_favourite_details_set_is_favourite (
++      FOLKS_FAVOURITE_DETAILS (individual),
+       gtk_check_menu_item_get_active (item));
+ }
+ 
+@@ -761,7 +762,8 @@
+   item = gtk_check_menu_item_new_with_label (_("Favorite"));
+ 
+   gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item),
+-      folks_favourite_get_is_favourite (FOLKS_FAVOURITE (individual)));
++      folks_favourite_details_get_is_favourite (
++          FOLKS_FAVOURITE_DETAILS (individual)));
+ 
+   g_signal_connect (item, "toggled",
+       G_CALLBACK (favourite_menu_item_toggled_cb), individual);
+diff -urN empathy-2.32.1.orig//libempathy-gtk/empathy-individual-store.c empathy-2.32.1/libempathy-gtk/empathy-individual-store.c
+--- empathy-2.32.1.orig//libempathy-gtk/empathy-individual-store.c	2010-11-15 13:20:19.000000000 +0000
++++ empathy-2.32.1/libempathy-gtk/empathy-individual-store.c	2011-11-03 18:15:12.853071873 +0000
+@@ -168,7 +168,7 @@
+ 
+   gtk_tree_store_insert_with_values (self, iter, parent, 0,
+       EMPATHY_INDIVIDUAL_STORE_COL_NAME,
+-      folks_individual_get_alias (individual),
++      folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (individual)),
+       EMPATHY_INDIVIDUAL_STORE_COL_INDIVIDUAL, individual,
+       EMPATHY_INDIVIDUAL_STORE_COL_IS_GROUP, FALSE,
+       EMPATHY_INDIVIDUAL_STORE_COL_IS_SEPARATOR, FALSE,
+@@ -381,12 +381,14 @@
+ 
+   priv = GET_PRIV (self);
+ 
+-  if (EMP_STR_EMPTY (folks_individual_get_alias (individual)))
++  if (EMP_STR_EMPTY (folks_alias_details_get_alias (
++          FOLKS_ALIAS_DETAILS (individual))))
+     return;
+ 
+   if (priv->show_groups)
+     {
+-      group_set = folks_individual_get_groups (individual);
++      group_set = folks_group_details_get_groups (
++          FOLKS_GROUP_DETAILS (individual));
+       groups = g_hash_table_get_keys (group_set);
+     }
+ 
+@@ -437,11 +439,10 @@
+           individual, flags);
+     }
+   g_list_free (groups);
+-  if (group_set != NULL)
+-    g_hash_table_unref (group_set);
+ 
+   if (priv->show_groups &&
+-      folks_favourite_get_is_favourite (FOLKS_FAVOURITE (individual)))
++      folks_favourite_details_get_is_favourite (
++          FOLKS_FAVOURITE_DETAILS (individual)))
+     {
+       /* Add contact to the fake 'Favorites' group */
+       GtkTreeIter iter_group;
+@@ -523,7 +524,8 @@
+   ShowActiveData *data;
+ 
+   DEBUG ("Individual'%s' now active, and %s be removed",
+-      folks_individual_get_alias (individual), remove_ ? "WILL" : "WILL NOT");
++      folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (individual)),
++      remove_ ? "WILL" : "WILL NOT");
+ 
+   data = g_slice_new0 (ShowActiveData);
+ 
+@@ -567,12 +569,13 @@
+   if (data->remove)
+     {
+       DEBUG ("Individual'%s' active timeout, removing item",
+-          folks_individual_get_alias (data->individual));
++          folks_alias_details_get_alias (
++            FOLKS_ALIAS_DETAILS (data->individual)));
+       individual_store_remove_individual (data->self, data->individual);
+     }
+ 
+   DEBUG ("Individual'%s' no longer active",
+-      folks_individual_get_alias (data->individual));
++      folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (data->individual)));
+ 
+   individual_store_contact_set_active (data->self,
+       data->individual, FALSE, TRUE);
+@@ -601,7 +604,7 @@
+   if (error != NULL)
+     {
+       DEBUG ("failed to retrieve pixbuf for individual %s: %s",
+-          folks_individual_get_alias (individual),
++          folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (individual)),
+           error->message);
+       g_clear_error (&error);
+     }
+@@ -667,12 +670,13 @@
+     }
+ 
+   /* Get online state now. */
+-  now_online = folks_individual_is_online (individual);
++  now_online = folks_presence_details_is_online (
++      FOLKS_PRESENCE_DETAILS (individual));
+ 
+   if (!in_list)
+     {
+       DEBUG ("Individual'%s' in list:NO, should be:YES",
+-          folks_individual_get_alias (individual));
++          folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (individual)));
+ 
+       individual_store_add_individual (self, individual);
+ 
+@@ -686,7 +690,7 @@
+   else
+     {
+       DEBUG ("Individual'%s' in list:YES, should be:YES",
+-          folks_individual_get_alias (individual));
++          folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (individual)));
+ 
+       /* Get online state before. */
+       if (iters && g_list_length (iters) > 0)
+@@ -752,11 +756,13 @@
+           EMPATHY_INDIVIDUAL_STORE_COL_ICON_STATUS, pixbuf_status,
+           EMPATHY_INDIVIDUAL_STORE_COL_PIXBUF_AVATAR_VISIBLE, show_avatar,
+           EMPATHY_INDIVIDUAL_STORE_COL_NAME,
+-            folks_individual_get_alias (individual),
++            folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (individual)),
+           EMPATHY_INDIVIDUAL_STORE_COL_PRESENCE_TYPE,
+-            folks_individual_get_presence_type (individual),
++            folks_presence_details_get_presence_type (
++                FOLKS_PRESENCE_DETAILS (individual)),
+           EMPATHY_INDIVIDUAL_STORE_COL_STATUS,
+-            folks_individual_get_presence_message (individual),
++            folks_presence_details_get_presence_message (
++                FOLKS_PRESENCE_DETAILS (individual)),
+           EMPATHY_INDIVIDUAL_STORE_COL_COMPACT, priv->is_compact,
+           EMPATHY_INDIVIDUAL_STORE_COL_IS_GROUP, FALSE,
+           EMPATHY_INDIVIDUAL_STORE_COL_IS_ONLINE, now_online,
+@@ -796,7 +802,7 @@
+     EmpathyIndividualStore *self)
+ {
+   DEBUG ("Individual'%s' updated, checking roster is in sync...",
+-      folks_individual_get_alias (individual));
++      folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (individual)));
+ 
+   individual_store_contact_update (self, individual);
+ }
+@@ -1344,8 +1350,9 @@
+   g_return_val_if_fail (individual_a != NULL || individual_b != NULL, 0);
+ 
+   /* alias */
+-  ret_val = g_utf8_collate (folks_individual_get_alias (individual_a),
+-      folks_individual_get_alias (individual_b));
++  ret_val = g_utf8_collate (
++      folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (individual_a)),
++      folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (individual_b)));
+ 
+   if (ret_val != 0)
+     goto out;
+@@ -1416,8 +1423,12 @@
+   /* If we managed to get this far, we can start looking at
+    * the presences.
+    */
+-  folks_presence_type_a = folks_individual_get_presence_type (individual_a);
+-  folks_presence_type_b = folks_individual_get_presence_type (individual_b);
++  folks_presence_type_a =
++      folks_presence_details_get_presence_type (
++          FOLKS_PRESENCE_DETAILS (individual_a));
++  folks_presence_type_b =
++      folks_presence_details_get_presence_type (
++          FOLKS_PRESENCE_DETAILS (individual_b));
+   tp_presence_a = empathy_folks_presence_type_to_tp (folks_presence_type_a);
+   tp_presence_b = empathy_folks_presence_type_to_tp (folks_presence_type_b);
+ 
+diff -urN empathy-2.32.1.orig//libempathy-gtk/empathy-individual-view.c empathy-2.32.1/libempathy-gtk/empathy-individual-view.c
+--- empathy-2.32.1.orig//libempathy-gtk/empathy-individual-view.c	2010-11-15 13:20:19.000000000 +0000
++++ empathy-2.32.1/libempathy-gtk/empathy-individual-view.c	2011-11-03 18:18:08.773147622 +0000
+@@ -236,10 +236,10 @@
+     GAsyncResult *result,
+     gpointer user_data)
+ {
+-  FolksGroups *groups = FOLKS_GROUPS (source);
++  FolksGroupDetails *group_details = FOLKS_GROUP_DETAILS (source);
+   GError *error = NULL;
+ 
+-  folks_groups_change_group_finish (groups, result, &error);
++  folks_group_details_change_group_finish (group_details, result, &error);
+   if (error != NULL)
+     {
+       g_warning ("failed to change group: %s", error->message);
+@@ -370,14 +370,16 @@
+   if (!tp_strdiff (new_group, EMPATHY_INDIVIDUAL_STORE_FAVORITE))
+     {
+       /* Mark contact as favourite */
+-      folks_favourite_set_is_favourite (FOLKS_FAVOURITE (individual), TRUE);
++      folks_favourite_details_set_is_favourite (
++          FOLKS_FAVOURITE_DETAILS (individual), TRUE);
+       return;
+     }
+ 
+   if (!tp_strdiff (old_group, EMPATHY_INDIVIDUAL_STORE_FAVORITE))
+     {
+       /* Remove contact as favourite */
+-      folks_favourite_set_is_favourite (FOLKS_FAVOURITE (individual), FALSE);
++      folks_favourite_details_set_is_favourite (
++          FOLKS_FAVOURITE_DETAILS (individual), FALSE);
+ 
+       /* Don't try to remove it */
+       old_group = NULL;
+@@ -385,14 +387,14 @@
+ 
+   if (new_group != NULL)
+     {
+-      folks_groups_change_group (FOLKS_GROUPS (individual), new_group, TRUE,
+-          groups_change_group_cb, NULL);
++      folks_group_details_change_group (FOLKS_GROUP_DETAILS (individual),
++          new_group, TRUE, groups_change_group_cb, NULL);
+     }
+ 
+   if (old_group != NULL && action == GDK_ACTION_MOVE)
+     {
+-      folks_groups_change_group (FOLKS_GROUPS (individual), old_group,
+-          FALSE, groups_change_group_cb, NULL);
++      folks_group_details_change_group (FOLKS_GROUP_DETAILS (individual),
++          old_group, FALSE, groups_change_group_cb, NULL);
+     }
+ }
+ 
+@@ -624,7 +626,8 @@
+         }
+ 
+       if (individual != NULL &&
+-          folks_individual_is_online (individual) &&
++          folks_presence_details_is_online (
++              FOLKS_PRESENCE_DETAILS (individual)) &&
+           (caps & EMPATHY_CAPABILITIES_FT))
+         {
+           gdk_drag_status (context, GDK_ACTION_COPY, time_);
+@@ -1612,7 +1615,7 @@
+     return (priv->show_offline || is_online);
+ 
+   /* check alias name */
+-  str = folks_individual_get_alias (individual);
++  str = folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (individual));
+ 
+   if (empathy_live_search_match (live, str))
+     return TRUE;
+@@ -2318,7 +2321,7 @@
+       text =
+           g_strdup_printf (_
+           ("Do you really want to remove the contact '%s'?"),
+-          folks_individual_get_alias (individual));
++          folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (individual)));
+       if (individual_view_remove_dialog_show (parent, _("Removing contact"),
+               text))
+         {
+diff -urN empathy-2.32.1.orig//libempathy-gtk/empathy-individual-widget.c empathy-2.32.1/libempathy-gtk/empathy-individual-widget.c
+--- empathy-2.32.1.orig//libempathy-gtk/empathy-individual-widget.c	2010-11-15 13:20:19.000000000 +0000
++++ empathy-2.32.1/libempathy-gtk/empathy-individual-widget.c	2011-11-03 18:15:12.856075751 +0000
+@@ -435,9 +435,9 @@
+   if (priv->flags & EMPATHY_INDIVIDUAL_WIDGET_EDIT_GROUPS &&
+       priv->individual != NULL)
+     {
+-      empathy_groups_widget_set_groupable (
++      empathy_groups_widget_set_group_details (
+           EMPATHY_GROUPS_WIDGET (priv->groups_widget),
+-          FOLKS_GROUPS (priv->individual));
++          FOLKS_GROUP_DETAILS (priv->individual));
+       gtk_widget_show (priv->groups_widget);
+     }
+   else
+@@ -761,8 +761,8 @@
+ 
+               /* Add a marker to the map */
+               marker = champlain_marker_new_with_text (
+-                  folks_alias_get_alias (FOLKS_ALIAS (persona)), NULL, NULL,
+-                  NULL);
++                  folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (persona)),
++                  NULL, NULL, NULL);
+               champlain_base_marker_set_position (
+                   CHAMPLAIN_BASE_MARKER (marker), lat, lon);
+               clutter_container_add (CLUTTER_CONTAINER (layer), marker, NULL);
+@@ -816,7 +816,7 @@
+ 
+   /* FIXME: We just choose the first Persona which has an avatar, and save that.
+    * The avatar handling in EmpathyContact needs to be moved into libfolks as
+-   * much as possible, and this code rewritten to use FolksAvatar.
++   * much as possible, and this code rewritten to use FolksHasAvatar.
+    * (bgo#627401) */
+   personas = folks_individual_get_personas (individual);
+   for (l = personas; l != NULL; l = l->next)
+@@ -1058,7 +1058,8 @@
+         }
+       else
+         {
+-          folks_alias_set_alias (FOLKS_ALIAS (priv->individual), alias);
++          folks_alias_details_set_alias (FOLKS_ALIAS_DETAILS (priv->individual),
++              alias);
+         }
+     }
+ 
+@@ -1070,8 +1071,8 @@
+     EmpathyIndividualWidget *self)
+ {
+   gboolean active = gtk_toggle_button_get_active (button);
+-  folks_favourite_set_is_favourite (
+-      FOLKS_FAVOURITE (GET_PRIV (self)->individual), active);
++  folks_favourite_details_set_is_favourite (
++      FOLKS_FAVOURITE_DETAILS (GET_PRIV (self)->individual), active);
+ }
+ 
+ static void
+@@ -1133,12 +1134,12 @@
+   if (GTK_IS_ENTRY (alias_widget))
+     {
+       gtk_entry_set_text (GTK_ENTRY (alias_widget),
+-          folks_alias_get_alias (FOLKS_ALIAS (folks_object)));
++          folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (folks_object)));
+     }
+   else
+     {
+       gtk_label_set_label (GTK_LABEL (alias_widget),
+-          folks_alias_get_alias (FOLKS_ALIAS (folks_object)));
++          folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (folks_object)));
+     }
+ }
+ 
+@@ -1167,11 +1168,13 @@
+   state_image = g_object_get_data (table, "state-image");
+ 
+   /* FIXME: Default messages should be moved into libfolks (bgo#627403) */
+-  message = folks_presence_get_presence_message (FOLKS_PRESENCE (folks_object));
++  message = folks_presence_details_get_presence_message (
++      FOLKS_PRESENCE_DETAILS (folks_object));
+   if (EMP_STR_EMPTY (message))
+     {
+       message = empathy_presence_get_default_message (
+-          folks_presence_get_presence_type (FOLKS_PRESENCE (folks_object)));
++          folks_presence_details_get_presence_type (
++              FOLKS_PRESENCE_DETAILS (folks_object)));
+     }
+ 
+   if (message != NULL)
+@@ -1181,7 +1184,8 @@
+ 
+   gtk_image_set_from_icon_name (GTK_IMAGE (state_image),
+       empathy_icon_name_for_presence (
+-          folks_presence_get_presence_type (FOLKS_PRESENCE (folks_object))),
++          folks_presence_details_get_presence_type (
++              FOLKS_PRESENCE_DETAILS (folks_object))),
+       GTK_ICON_SIZE_BUTTON);
+   gtk_widget_show (state_image);
+ }
+@@ -1210,7 +1214,8 @@
+   if (GTK_IS_TOGGLE_BUTTON (favourite_widget))
+     {
+       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (favourite_widget),
+-          folks_favourite_get_is_favourite (FOLKS_FAVOURITE (folks_object)));
++          folks_favourite_details_get_is_favourite (
++              FOLKS_FAVOURITE_DETAILS (folks_object)));
+     }
+ }
+ 
+diff -urN empathy-2.32.1.orig//libempathy-gtk/empathy-linking-dialog.c empathy-2.32.1/libempathy-gtk/empathy-linking-dialog.c
+--- empathy-2.32.1.orig//libempathy-gtk/empathy-linking-dialog.c	2010-11-15 13:20:19.000000000 +0000
++++ empathy-2.32.1/libempathy-gtk/empathy-linking-dialog.c	2011-11-03 18:15:12.856075751 +0000
+@@ -180,7 +180,7 @@
+       /* Show a confirmation dialogue first */
+       dialog = gtk_message_dialog_new (GTK_WINDOW (self), GTK_DIALOG_MODAL,
+           GTK_MESSAGE_WARNING, GTK_BUTTONS_NONE, _("Unlink meta-contact '%s'?"),
+-          folks_individual_get_alias (individual));
++          folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (individual)));
+       gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+           _("Are you sure you want to unlink this meta-contact? This will "
+             "completely split the meta-contact into the contacts it "
+diff -urN empathy-2.32.1.orig//libempathy-gtk/empathy-persona-store.c empathy-2.32.1/libempathy-gtk/empathy-persona-store.c
+--- empathy-2.32.1.orig//libempathy-gtk/empathy-persona-store.c	2010-11-15 13:20:19.000000000 +0000
++++ empathy-2.32.1/libempathy-gtk/empathy-persona-store.c	2011-11-03 18:15:12.857215354 +0000
+@@ -142,7 +142,7 @@
+   ShowActiveData *data;
+ 
+   DEBUG ("Contact:'%s' now active, and %s be removed",
+-      folks_alias_get_alias (FOLKS_ALIAS (persona)),
++      folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (persona)),
+       remove_ ? "WILL" : "WILL NOT");
+ 
+   data = g_slice_new0 (ShowActiveData);
+@@ -212,7 +212,8 @@
+ static gboolean
+ persona_active_cb (ShowActiveData *data)
+ {
+-  const gchar *alias = folks_alias_get_alias (FOLKS_ALIAS (data->persona));
++  const gchar *alias =
++      folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (data->persona));
+ 
+   if (data->remove)
+     {
+@@ -234,7 +235,7 @@
+     EmpathyPersonaStore *self)
+ {
+   DEBUG ("Contact:'%s' updated, checking roster is in sync...",
+-      folks_alias_get_alias (FOLKS_ALIAS (persona)));
++      folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (persona)));
+ 
+   update_persona (self, persona);
+ }
+@@ -288,7 +289,7 @@
+ 
+   priv = GET_PRIV (self);
+ 
+-  alias = folks_alias_get_alias (FOLKS_ALIAS (persona));
++  alias = folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (persona));
+   if (EMP_STR_EMPTY (alias))
+     return;
+ 
+@@ -407,7 +408,7 @@
+   const gchar *alias;
+ 
+   path = find_persona (self, persona);
+-  alias = folks_alias_get_alias (FOLKS_ALIAS (persona));
++  alias = folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (persona));
+ 
+   if (path == NULL)
+     {
+@@ -437,7 +438,8 @@
+       gtk_tree_path_free (path);
+ 
+       /* Get online state now. */
+-      now_online = folks_presence_is_online (FOLKS_PRESENCE (persona));
++      now_online = folks_presence_details_is_online (
++          FOLKS_PRESENCE_DETAILS (persona));
+ 
+       /* Get online state before. */
+       gtk_tree_model_get (GTK_TREE_MODEL (self), &iter,
+@@ -483,9 +485,11 @@
+           EMPATHY_PERSONA_STORE_COL_DISPLAY_ID,
+               folks_persona_get_display_id (persona),
+           EMPATHY_PERSONA_STORE_COL_PRESENCE_TYPE,
+-              folks_presence_get_presence_type (FOLKS_PRESENCE (persona)),
++              folks_presence_details_get_presence_type (
++                  FOLKS_PRESENCE_DETAILS (persona)),
+           EMPATHY_PERSONA_STORE_COL_STATUS,
+-              folks_presence_get_presence_message (FOLKS_PRESENCE (persona)),
++              folks_presence_details_get_presence_message (
++                  FOLKS_PRESENCE_DETAILS (persona)),
+           EMPATHY_PERSONA_STORE_COL_IS_ONLINE, now_online,
+           EMPATHY_PERSONA_STORE_COL_CAN_AUDIO_CALL,
+               empathy_contact_get_capabilities (contact) &
+@@ -551,8 +555,9 @@
+   g_return_val_if_fail (persona_a != NULL || persona_b != NULL, 0);
+ 
+   /* alias */
+-  ret_val = g_utf8_collate (folks_alias_get_alias (FOLKS_ALIAS (persona_a)),
+-          folks_alias_get_alias (FOLKS_ALIAS (persona_b)));
++  ret_val = g_utf8_collate (
++      folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (persona_a)),
++      folks_alias_details_get_alias (FOLKS_ALIAS_DETAILS (persona_b)));
+ 
+   if (ret_val != 0)
+     goto out;
+@@ -617,8 +622,10 @@
+    * the presences.
+    */
+   ret_val = -tp_connection_presence_type_cmp_availability (
+-      folks_presence_get_presence_type (FOLKS_PRESENCE (persona_a)),
+-      folks_presence_get_presence_type (FOLKS_PRESENCE (persona_b)));
++      folks_presence_details_get_presence_type (
++          FOLKS_PRESENCE_DETAILS (persona_a)),
++      folks_presence_details_get_presence_type (
++          FOLKS_PRESENCE_DETAILS (persona_b)));
+ 
+   if (ret_val == 0) {
+     /* Fallback: compare by name et al. */
+diff -urN empathy-2.32.1.orig//libempathy-gtk/empathy-ui-utils.c empathy-2.32.1/libempathy-gtk/empathy-ui-utils.c
+--- empathy-2.32.1.orig//libempathy-gtk/empathy-ui-utils.c	2010-11-15 13:20:19.000000000 +0000
++++ empathy-2.32.1/libempathy-gtk/empathy-ui-utils.c	2011-11-03 18:15:12.857215354 +0000
+@@ -231,7 +231,9 @@
+ 	FolksPresenceType folks_presence;
+ 	TpConnectionPresenceType presence;
+ 
+-	folks_presence = folks_individual_get_presence_type (individual);
++	folks_presence =
++	    folks_presence_details_get_presence_type (
++	        FOLKS_PRESENCE_DETAILS (individual));
+ 	presence = empathy_folks_presence_type_to_tp (folks_presence);
+ 
+ 	return empathy_icon_name_for_presence (presence);
+@@ -631,7 +633,8 @@
+ 			callback, user_data,
+ 			empathy_pixbuf_avatar_from_individual_scaled_async);
+ 
+-	avatar_file = folks_avatar_get_avatar (FOLKS_AVATAR (individual));
++	avatar_file =
++		folks_avatar_details_get_avatar (FOLKS_AVATAR_DETAILS (individual));
+ 	if (avatar_file == NULL)
+ 		goto out;
+ 
