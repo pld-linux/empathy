@@ -1,18 +1,18 @@
 Summary:	Very easy to use GNOME Telepathy client
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	2.32.1
-Release:	4
+Version:	2.34.0
+Release:	1
 License:	GPL v2
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.32/%{name}-%{version}.tar.bz2
-# Source0-md5:	09e7d72cd58a5f776b5097e7d5596095
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/2.34/%{name}-%{version}.tar.bz2
+# Source0-md5:	f96c7b7a51ae2049d35c9db0282a62c5
 Patch0:		configure.patch
-Patch1:		%{name}-telepathy-logger.patch
-Patch2:		%{name}-folks.patch
+Patch1:		%{name}-missing-include.patch
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	GConf2-devel >= 2.26.0
 BuildRequires:	NetworkManager-devel >= 0.7.0
+BuildRequires:	OpenGL-devel
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake >= 1:1.9
 BuildRequires:	clutter-gtk-devel >= 0.10.0
@@ -38,7 +38,7 @@ BuildRequires:	iso-codes >= 0.35
 BuildRequires:	libcanberra-gtk-devel >= 0.4
 BuildRequires:	libchamplain-devel >= 0.8.0
 BuildRequires:	libgnome-keyring-devel >= 2.26.0
-BuildRequires:	libnotify-devel >= 0.4.4
+BuildRequires:	libnotify-devel >= 0.7.0
 BuildRequires:	libtool
 BuildRequires:	libunique-devel >= 1.1.2
 BuildRequires:	libxml2-devel >= 1:2.6.28
@@ -48,8 +48,8 @@ BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.592
 BuildRequires:	sed >= 4.0
 BuildRequires:	telepathy-farsight-devel >= 0.0.14
-BuildRequires:	telepathy-glib-devel >= 0.12.0
-BuildRequires:	telepathy-logger-devel >= 0.1.5
+BuildRequires:	telepathy-glib-devel >= 0.14.1
+BuildRequires:	telepathy-logger-devel >= 0.2.0
 Requires(post,postun):	glib2 >= 1:2.26.0
 Requires(post,postun):	gtk+2 >= 2:2.12.0
 Requires(post,postun):	hicolor-icon-theme
@@ -94,11 +94,10 @@ Pozwala na przesyłanie z Nautilusa plików do kontaktów Empathy.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
+%patch1 -p0
 
-rm po/en@shaw.po
-sed -i 's/^en@shaw//' po/LINGUAS
+%{__rm} po/en@shaw.po
+%{__sed} -i 's/^en@shaw//' po/LINGUAS
 
 %build
 %{__intltoolize}
@@ -114,7 +113,8 @@ sed -i 's/^en@shaw//' po/LINGUAS
 	--disable-static \
 	--enable-favourite-contacts \
 	--enable-location \
-	--enable-nautilus-sendto
+	--enable-nautilus-sendto \
+	--without-ca-file
 
 %{__make} -j 1
 
@@ -125,8 +125,8 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT \
 	GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/nautilus-sendto/plugins/*.la
-rm -f $RPM_BUILD_ROOT%{py_sitedir}/*.{la,a}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/nautilus-sendto/plugins/*.la
+%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/*.{la,a}
 
 %find_lang %{name} --with-gnome --with-omf
 
