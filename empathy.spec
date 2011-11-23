@@ -126,7 +126,6 @@ rm -rf $RPM_BUILD_ROOT
 	GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/nautilus-sendto/plugins/*.la
-%{__rm} $RPM_BUILD_ROOT%{py_sitedir}/*.{la,a}
 
 %find_lang %{name} --with-gnome --with-omf
 
