@@ -13,6 +13,7 @@ BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	cheese-devel >= 3.0.0
 BuildRequires:	clutter-devel >= 1.7.14
+BuildRequires:	clutter-gst-devel
 BuildRequires:	clutter-gtk-devel >= 0.90.3
 BuildRequires:	dbus-glib-devel >= 0.74
 BuildRequires:	docbook-dtd412-xml
