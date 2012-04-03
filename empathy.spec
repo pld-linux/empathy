@@ -53,9 +53,9 @@ BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.592
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	telepathy-farstream-devel >= 0.2.1
-BuildRequires:	telepathy-glib-devel >= 0.17.5
+BuildRequires:	telepathy-glib-devel >= 0.18.0
 BuildRequires:	telepathy-logger-devel >= 0.2.10-2
-BuildRequires:	telepathy-mission-control-devel >= 5.9.1
+BuildRequires:	telepathy-mission-control-devel >= 5.12.0
 BuildRequires:	udev-glib-devel
 BuildRequires:	xz
 BuildRequires:	yelp-tools
@@ -63,9 +63,9 @@ Requires(post,postun):	glib2 >= 1:2.26.0
 Requires(post,postun):	gtk-update-icon-cache
 Requires:	gsettings-desktop-schemas
 Requires:	hicolor-icon-theme
+Requires:	telepathy-glib >= 0.18.0
 Requires:	telepathy-logger >= 0.2.10-2
-Requires:	telepathy-mission-control >= 5.9.1
-Suggests:	telepathy-butterfly
+Requires:	telepathy-mission-control >= 5.12.0
 Suggests:	telepathy-gabble
 Suggests:	telepathy-haze
 Suggests:	telepathy-idle
