@@ -1,18 +1,18 @@
 Summary:	High-level library and user-interface for Telepathy
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	3.4.0
+Version:	3.4.0.1
 Release:	1
 License:	GPL v2+
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.4/%{name}-%{version}.tar.xz
-# Source0-md5:	6e49aa3aec1f9c9843e8971ba4687b46
+# Source0-md5:	bb650137985e6fef9dbbca3353fbc643
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	NetworkManager-devel >= 0.7.0
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	cheese-devel >= 3.0.0
-BuildRequires:	clutter-devel >= 1.8.0
+BuildRequires:	clutter-devel >= 1.10.0
 BuildRequires:	clutter-gst-devel >= 1.5.2
 BuildRequires:	clutter-gtk-devel >= 1.0.0
 BuildRequires:	dbus-glib-devel >= 0.74
@@ -54,7 +54,7 @@ BuildRequires:	rpmbuild(macros) >= 1.592
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	telepathy-farstream-devel >= 0.2.1
 BuildRequires:	telepathy-glib-devel >= 0.18.0
-BuildRequires:	telepathy-logger-devel >= 0.2.10-2
+BuildRequires:	telepathy-logger-devel >= 0.2.13
 BuildRequires:	telepathy-mission-control-devel >= 5.12.0
 BuildRequires:	udev-glib-devel
 BuildRequires:	xz
@@ -64,7 +64,7 @@ Requires(post,postun):	gtk-update-icon-cache
 Requires:	gsettings-desktop-schemas
 Requires:	hicolor-icon-theme
 Requires:	telepathy-glib >= 0.18.0
-Requires:	telepathy-logger >= 0.2.10-2
+Requires:	telepathy-logger >= 0.2.13
 Requires:	telepathy-mission-control >= 5.12.0
 Suggests:	telepathy-gabble
 Suggests:	telepathy-haze
