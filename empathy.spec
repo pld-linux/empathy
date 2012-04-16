@@ -1,12 +1,12 @@
 Summary:	High-level library and user-interface for Telepathy
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	3.4.0.2
+Version:	3.4.1
 Release:	1
 License:	GPL v2+
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.4/%{name}-%{version}.tar.xz
-# Source0-md5:	01dc0373bb46fbcaa2f3ded57d58ff43
+# Source0-md5:	f8d63575926a21cb0aa98375b35968ef
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	NetworkManager-devel >= 0.7.0
 BuildRequires:	autoconf >= 2.64
