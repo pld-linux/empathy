@@ -1,20 +1,20 @@
 Summary:	High-level library and user-interface for Telepathy
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	3.4.2
+Version:	3.4.2.1
 Release:	1
 License:	GPL v2+
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.4/%{name}-%{version}.tar.xz
-# Source0-md5:	294f16867f14c0e292084b35bc8d2fb7
+# Source0-md5:	d3abc99fa50f98afad9899b295d78061
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	NetworkManager-devel >= 0.7.0
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
-BuildRequires:	cheese-devel >= 3.0.0
+BuildRequires:	cheese-devel >= 3.4.0
 BuildRequires:	clutter-devel >= 1.10.0
 BuildRequires:	clutter-gst-devel >= 1.5.2
-BuildRequires:	clutter-gtk-devel >= 1.0.0
+BuildRequires:	clutter-gtk-devel >= 1.2.0
 BuildRequires:	dbus-glib-devel >= 0.74
 BuildRequires:	docbook-dtd412-xml
 BuildRequires:	enchant-devel >= 1.2.0
