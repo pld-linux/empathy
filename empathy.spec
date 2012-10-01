@@ -1,45 +1,42 @@
 Summary:	High-level library and user-interface for Telepathy
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	3.4.2.3
+Version:	3.6.0
 Release:	1
 License:	GPL v2+
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.4/%{name}-%{version}.tar.xz
-# Source0-md5:	a35af87389e4c47835300871a8b38b12
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.6/%{name}-%{version}.tar.xz
+# Source0-md5:	24329a9ee997e8b30cf89c4854f35188
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	NetworkManager-devel >= 0.7.0
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	cheese-devel >= 3.4.0
 BuildRequires:	clutter-devel >= 1.10.0
-BuildRequires:	clutter-gst-devel >= 1.5.2
+BuildRequires:	clutter-gst-devel >= 1.9.92
 BuildRequires:	clutter-gtk-devel >= 1.2.0
 BuildRequires:	dbus-glib-devel >= 0.74
-BuildRequires:	docbook-dtd412-xml
 BuildRequires:	enchant-devel >= 1.2.0
-BuildRequires:	evolution-data-server-devel >= 3.2.0
-BuildRequires:	farstream-devel
-BuildRequires:	folks-devel >= 0.6.6
-BuildRequires:	gcr-devel
+BuildRequires:	farstream-devel >= 0.2.0
+BuildRequires:	folks-devel >= 0.7.3
+BuildRequires:	gcr-devel >= 2.91.4
 BuildRequires:	geoclue-devel >= 0.12
 BuildRequires:	gettext-devel
-BuildRequires:	glib2-devel >= 1:2.30.0
-BuildRequires:	gnome-common >= 2.24.0
-BuildRequires:	gnome-doc-utils >= 0.18.0
-BuildRequires:	gnome-online-accounts-devel >= 3.4.0
+BuildRequires:	glib2-devel >= 1:2.33.3
+BuildRequires:	gnome-online-accounts-devel >= 3.5.1
 BuildRequires:	gnutls-devel >= 2.8.5
 BuildRequires:	gsettings-desktop-schemas-devel
-BuildRequires:	gstreamer-devel >= 0.10.32
-BuildRequires:	gstreamer-plugins-base-devel >= 0.10.32
-BuildRequires:	gtk+3-devel >= 3.4.0
+BuildRequires:	gstreamer-devel >= 1.0.0
+BuildRequires:	gstreamer-plugins-base-devel >= 1.0.0
+BuildRequires:	gtk+3-devel >= 3.5.1
 BuildRequires:	gtk-webkit3-devel >= 1.4.0
-BuildRequires:	intltool >= 0.40.0
+BuildRequires:	intltool >= 0.50.0
 BuildRequires:	iso-codes >= 0.35
 BuildRequires:	libcanberra-gtk3-devel >= 0.25
 BuildRequires:	libchamplain-devel >= 0.12.1
-BuildRequires:	libgnome-keyring-devel >= 2.26.0
+BuildRequires:	libgee-devel
 BuildRequires:	libnotify-devel >= 0.7.0
+BuildRequires:	libsecret-devel >= 0.5
 BuildRequires:	libsoup-devel
 BuildRequires:	libtool >= 2:2.2
 BuildRequires:	libxml2-devel >= 1:2.6.28
@@ -52,18 +49,19 @@ BuildRequires:	python-modules >= 2.3
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.592
 BuildRequires:	tar >= 1:1.22
-BuildRequires:	telepathy-farstream-devel >= 0.2.1
-BuildRequires:	telepathy-glib-devel >= 0.18.0
+BuildRequires:	telepathy-farstream-devel >= 0.4.999
+BuildRequires:	telepathy-glib-devel >= 0.19.9
 BuildRequires:	telepathy-logger-devel >= 0.2.13
 BuildRequires:	telepathy-mission-control-devel >= 5.12.0
 BuildRequires:	udev-glib-devel
+BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xz
 BuildRequires:	yelp-tools
 Requires(post,postun):	glib2 >= 1:2.26.0
 Requires(post,postun):	gtk-update-icon-cache
 Requires:	gsettings-desktop-schemas
 Requires:	hicolor-icon-theme
-Requires:	telepathy-glib >= 0.18.0
+Requires:	telepathy-glib >= 0.19.9
 Requires:	telepathy-logger >= 0.2.13
 Requires:	telepathy-mission-control >= 5.12.0
 Suggests:	telepathy-gabble
@@ -130,7 +128,9 @@ kontaktów Empathy.
 	--enable-location \
 	--enable-map \
 	--enable-nautilus-sendto \
-	--enable-spell
+	--enable-spell \
+	--enable-gst-1.0 \
+	--disable-ubuntu-online-accounts
 
 %{__make}
 
@@ -142,6 +142,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/nautilus-sendto/plugins/*.la
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/mission-control-plugins.0/*.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/empathy/*.la
 
 %find_lang %{name} --with-gnome --with-omf
 
@@ -166,7 +167,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libexecdir}/empathy-call
 %attr(755,root,root) %{_libexecdir}/empathy-chat
 %attr(755,root,root) %{_libdir}/mission-control-plugins.0/mcp-account-manager-goa.so
+%dir %{_libdir}/empathy
+%attr(755,root,root) %{_libdir}/empathy/*.so
 %{_datadir}/%{name}
+%{_datadir}/adium
 %{_datadir}/GConf/gsettings/empathy.convert
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.Auth.service
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.Call.service
