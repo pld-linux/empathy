@@ -132,7 +132,7 @@ kontaktów Empathy.
 	--enable-gst-1.0 \
 	--disable-ubuntu-online-accounts
 
-%{__make}
+%{__make} -j1
 
 %install
 rm -rf $RPM_BUILD_ROOT
