@@ -59,6 +59,7 @@ BuildRequires:	xz
 BuildRequires:	yelp-tools
 Requires(post,postun):	glib2 >= 1:2.26.0
 Requires(post,postun):	gtk-update-icon-cache
+Requires:	evolution-data-server
 Requires:	gsettings-desktop-schemas
 Requires:	hicolor-icon-theme
 Requires:	telepathy-glib >= 0.19.9
