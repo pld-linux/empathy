@@ -65,6 +65,7 @@ Requires:	hicolor-icon-theme
 Requires:	telepathy-glib >= 0.19.9
 Requires:	telepathy-logger >= 0.2.13
 Requires:	telepathy-mission-control >= 5.12.0
+Suggests:	gnome-contacts
 Suggests:	telepathy-gabble
 Suggests:	telepathy-haze
 Suggests:	telepathy-idle
