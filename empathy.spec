@@ -1,24 +1,24 @@
 Summary:	High-level library and user-interface for Telepathy
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	3.6.3
-Release:	2
+Version:	3.8.0
+Release:	1
 License:	GPL v2+
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.6/%{name}-%{version}.tar.xz
-# Source0-md5:	b45dc0c996a7068efe897e6a22896943
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.8/%{name}-%{version}.tar.xz
+# Source0-md5:	2e31241929d2de09aed3b1d9688058c9
 URL:		http://live.gnome.org/Empathy
-BuildRequires:	NetworkManager-devel >= 0.7.0
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	cheese-devel >= 3.4.0
 BuildRequires:	clutter-devel >= 1.10.0
 BuildRequires:	clutter-gst-devel >= 1.9.92
 BuildRequires:	clutter-gtk-devel >= 1.2.0
+BuildRequires:	cogl-devel
 BuildRequires:	dbus-glib-devel >= 0.74
 BuildRequires:	enchant-devel >= 1.2.0
 BuildRequires:	farstream-devel >= 0.2.0
-BuildRequires:	folks-devel >= 0.7.3
+BuildRequires:	folks-devel >= 0.9.0
 BuildRequires:	gcr-devel >= 2.91.4
 BuildRequires:	geoclue-devel >= 0.12
 BuildRequires:	gettext-devel
@@ -29,19 +29,18 @@ BuildRequires:	gsettings-desktop-schemas-devel
 BuildRequires:	gstreamer-devel >= 1.0.0
 BuildRequires:	gstreamer-plugins-base-devel >= 1.0.0
 BuildRequires:	gtk+3-devel >= 3.5.1
-BuildRequires:	gtk-webkit3-devel >= 1.4.0
+BuildRequires:	gtk-webkit3-devel >= 1.10.0
 BuildRequires:	intltool >= 0.50.0
 BuildRequires:	iso-codes >= 0.35
 BuildRequires:	libcanberra-gtk3-devel >= 0.25
 BuildRequires:	libchamplain-devel >= 0.12.1
-BuildRequires:	libgee0.6-devel
+BuildRequires:	libgee-devel >= 0.8.0
 BuildRequires:	libnotify-devel >= 0.7.0
 BuildRequires:	libsecret-devel >= 0.5
 BuildRequires:	libsoup-devel
 BuildRequires:	libtool >= 2:2.2
 BuildRequires:	libxml2-devel >= 1:2.6.28
 BuildRequires:	libxslt-progs
-BuildRequires:	nautilus-sendto-devel >= 3.0.0
 BuildRequires:	pkgconfig
 BuildRequires:	pulseaudio-devel
 BuildRequires:	python >= 2.3
@@ -49,9 +48,9 @@ BuildRequires:	python-modules >= 2.3
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.592
 BuildRequires:	tar >= 1:1.22
-BuildRequires:	telepathy-farstream-devel >= 0.4.999
+BuildRequires:	telepathy-farstream-devel >= 0.6.0
 BuildRequires:	telepathy-glib-devel >= 0.19.9
-BuildRequires:	telepathy-logger-devel >= 0.2.13
+BuildRequires:	telepathy-logger-devel >= 0.8.0
 BuildRequires:	telepathy-mission-control-devel >= 5.12.0
 BuildRequires:	udev-glib-devel
 BuildRequires:	xorg-lib-libX11-devel
@@ -60,10 +59,11 @@ BuildRequires:	yelp-tools
 Requires(post,postun):	glib2 >= 1:2.26.0
 Requires(post,postun):	gtk-update-icon-cache
 Requires:	evolution-data-server
+Requires:	folks >= 0.9.0
 Requires:	gsettings-desktop-schemas
 Requires:	hicolor-icon-theme
 Requires:	telepathy-glib >= 0.19.9
-Requires:	telepathy-logger >= 0.2.13
+Requires:	telepathy-logger >= 0.8.0
 Requires:	telepathy-mission-control >= 5.12.0
 Suggests:	gnome-contacts
 Suggests:	telepathy-gabble
@@ -75,6 +75,7 @@ Obsoletes:	empathy-apidocs < 2.29.1
 Obsoletes:	empathy-devel < 2.29.1
 Obsoletes:	empathy-libs < 2.29.1
 Obsoletes:	gnome-jabber
+Obsoletes:	nautilus-sendto-empathy
 Obsoletes:	python-empathy < 2.29.1
 # sr@Latn vs. sr@latin
 Conflicts:	glibc-misc < 6:2.7
@@ -91,21 +92,6 @@ depend on installed components.)
 Celem Empathy jest uczynienie komunikowania poprzez Jabbera tak łatwym
 jak to tylko możliwe.
 
-%package -n nautilus-sendto-empathy
-Summary:	Empathy support for sending files in Nautilus
-Summary(pl.UTF-8):	Obsługa Empathy przy wysyłaniu plików z Nautilusa
-Group:		X11/Applications
-Requires:	%{name} = %{version}-%{release}
-Requires:	nautilus-sendto >= 3.0.0
-
-%description -n nautilus-sendto-empathy
-This plugin enables sending files from Nautilus to your Empathy
-contacts.
-
-%description -n nautilus-sendto-empathy -l pl.UTF-8
-Ta wtyczka pozwala na przesyłanie z poziomu Nautilusa plików do
-kontaktów Empathy.
-
 %prep
 %setup -q
 
@@ -118,9 +104,7 @@ kontaktów Empathy.
 %{__automake}
 # missing geocode-glib in pld
 %configure \
-	--with-connectivity=nm \
 	--with-cheese \
-	--with-eds \
 	--disable-silent-rules \
 	--disable-static \
 	--disable-geocode \
@@ -129,7 +113,7 @@ kontaktów Empathy.
 	--enable-gudev \
 	--enable-location \
 	--enable-map \
-	--enable-nautilus-sendto \
+	--disable-nautilus-sendto \
 	--enable-spell \
 	--enable-gst-1.0 \
 	--disable-ubuntu-online-accounts
@@ -142,7 +126,6 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/nautilus-sendto/plugins/*.la
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/mission-control-plugins.0/*.la
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/empathy/*.la
 
@@ -186,7 +169,3 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/hicolor/*/apps/*
 %{_mandir}/man1/empathy*.1*
 %{_desktopdir}/*.desktop
-
-%files -n nautilus-sendto-empathy
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/nautilus-sendto/plugins/libnstempathy.so
