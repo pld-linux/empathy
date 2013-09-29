@@ -1,12 +1,12 @@
 Summary:	High-level library and user-interface for Telepathy
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	3.8.3
+Version:	3.10.0
 Release:	1
 License:	GPL v2+
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.8/%{name}-%{version}.tar.xz
-# Source0-md5:	ff5746248812b71898541db63207f385
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.10/%{name}-%{version}.tar.xz
+# Source0-md5:	c7743dfedfc9e629e15353b6c3e8f6ab
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
@@ -18,17 +18,18 @@ BuildRequires:	cogl-devel
 BuildRequires:	dbus-glib-devel >= 0.74
 BuildRequires:	enchant-devel >= 1.2.0
 BuildRequires:	farstream-devel >= 0.2.0
-BuildRequires:	folks-devel >= 0.9.0
+BuildRequires:	folks-devel >= 0.9.5
 BuildRequires:	gcr-devel >= 2.91.4
-BuildRequires:	geoclue-devel >= 0.12
+BuildRequires:	geoclue2-devel >= 1.99.3
+BuildRequires:	geocode-glib-devel >= 0.99.1
 BuildRequires:	gettext-devel
-BuildRequires:	glib2-devel >= 1:2.33.3
+BuildRequires:	glib2-devel >= 1:2.38.0
 BuildRequires:	gnome-online-accounts-devel >= 3.5.1
 BuildRequires:	gnutls-devel >= 2.8.5
 BuildRequires:	gsettings-desktop-schemas-devel
 BuildRequires:	gstreamer-devel >= 1.0.0
 BuildRequires:	gstreamer-plugins-base-devel >= 1.0.0
-BuildRequires:	gtk+3-devel >= 3.5.1
+BuildRequires:	gtk+3-devel >= 3.10.0
 BuildRequires:	gtk-webkit3-devel >= 1.10.0
 BuildRequires:	intltool >= 0.50.0
 BuildRequires:	iso-codes >= 0.35
@@ -51,7 +52,7 @@ BuildRequires:	tar >= 1:1.22
 BuildRequires:	telepathy-farstream-devel >= 0.6.0
 BuildRequires:	telepathy-glib-devel >= 0.19.9
 BuildRequires:	telepathy-logger-devel >= 0.8.0
-BuildRequires:	telepathy-mission-control-devel >= 5.12.0
+BuildRequires:	telepathy-mission-control-devel >= 5.13.1
 BuildRequires:	udev-glib-devel
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xz
@@ -59,12 +60,12 @@ BuildRequires:	yelp-tools
 Requires(post,postun):	glib2 >= 1:2.26.0
 Requires(post,postun):	gtk-update-icon-cache
 Requires:	evolution-data-server
-Requires:	folks >= 0.9.0
+Requires:	folks >= 0.9.5
 Requires:	gsettings-desktop-schemas
 Requires:	hicolor-icon-theme
 Requires:	telepathy-glib >= 0.19.9
 Requires:	telepathy-logger >= 0.8.0
-Requires:	telepathy-mission-control >= 5.12.0
+Requires:	telepathy-mission-control >= 5.13.1
 Suggests:	gnome-contacts
 Suggests:	telepathy-gabble
 Suggests:	telepathy-haze
@@ -102,13 +103,10 @@ jak to tylko możliwe.
 %{__autoconf}
 %{__autoheader}
 %{__automake}
-# missing geocode-glib in pld
 %configure \
 	--with-cheese \
 	--disable-silent-rules \
 	--disable-static \
-	--disable-geocode \
-	--enable-call-logs \
 	--enable-goa \
 	--enable-gudev \
 	--enable-location \
@@ -129,7 +127,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/mission-control-plugins.0/*.la
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/empathy/*.la
 
-%find_lang %{name} --with-gnome --with-omf
+%find_lang %{name} --with-gnome --all-name
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -162,6 +160,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.Chat.service
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.FileTransfer.service
 %{_datadir}/glib-2.0/schemas/org.gnome.Empathy.gschema.xml
+%{_datadir}/glib-2.0/schemas/org.gnome.telepathy-account-widgets.gschema.xml
 %{_datadir}/telepathy/clients/Empathy.Auth.client
 %{_datadir}/telepathy/clients/Empathy.Call.client
 %{_datadir}/telepathy/clients/Empathy.Chat.client
