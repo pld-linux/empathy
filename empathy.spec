@@ -1,12 +1,12 @@
 Summary:	High-level library and user-interface for Telepathy
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	3.10.1
+Version:	3.10.3
 Release:	1
 License:	GPL v2+
 Group:		Applications/Communications
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.10/%{name}-%{version}.tar.xz
-# Source0-md5:	de11b2c74c7a935197aa78b8043eb04d
+# Source0-md5:	de7dc21d91d50a1a9861dd3f240274d7
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
@@ -154,6 +154,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/empathy/*.so
 %{_datadir}/%{name}
 %{_datadir}/adium
+%{_datadir}/appdata/empathy.appdata.xml
 %{_datadir}/GConf/gsettings/empathy.convert
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.Auth.service
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.Empathy.Call.service
