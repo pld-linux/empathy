@@ -1,12 +1,12 @@
 Summary:	High-level library and user-interface for Telepathy
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	3.10.3
-Release:	2
+Version:	3.12.0
+Release:	1
 License:	GPL v2+
 Group:		Applications/Communications
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.10/%{name}-%{version}.tar.xz
-# Source0-md5:	de7dc21d91d50a1a9861dd3f240274d7
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/empathy/3.12/%{name}-%{version}.tar.xz
+# Source0-md5:	1f8dad37c9353838fc5fa449ff685e19
 URL:		http://live.gnome.org/Empathy
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
@@ -14,7 +14,7 @@ BuildRequires:	cheese-devel >= 3.4.0
 BuildRequires:	clutter-devel >= 1.10.0
 BuildRequires:	clutter-gst-devel >= 1.9.92
 BuildRequires:	clutter-gtk-devel >= 1.2.0
-BuildRequires:	cogl-devel
+BuildRequires:	cogl-devel >= 1.14.0
 BuildRequires:	dbus-glib-devel >= 0.74
 BuildRequires:	enchant-devel >= 1.2.0
 BuildRequires:	farstream-devel >= 0.2.0
@@ -50,7 +50,7 @@ BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.592
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	telepathy-farstream-devel >= 0.6.0
-BuildRequires:	telepathy-glib-devel >= 0.19.9
+BuildRequires:	telepathy-glib-devel >= 0.24.0
 BuildRequires:	telepathy-logger-devel >= 0.8.0
 BuildRequires:	telepathy-mission-control-devel >= 5.13.1
 BuildRequires:	udev-glib-devel
@@ -63,7 +63,7 @@ Requires:	evolution-data-server
 Requires:	folks >= 0.9.5
 Requires:	gsettings-desktop-schemas
 Requires:	hicolor-icon-theme
-Requires:	telepathy-glib >= 0.19.9
+Requires:	telepathy-glib >= 0.24.0
 Requires:	telepathy-logger >= 0.8.0
 Requires:	telepathy-mission-control >= 5.13.1
 Suggests:	gnome-contacts
