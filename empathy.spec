@@ -22,7 +22,7 @@ BuildRequires:	folks-devel >= 0.9.5
 BuildRequires:	gcr-devel >= 2.91.4
 BuildRequires:	geoclue2-devel >= 1.99.3
 BuildRequires:	geocode-glib-devel >= 0.99.1
-BuildRequires:	gettext-devel
+BuildRequires:	gettext-tools
 BuildRequires:	glib2-devel >= 1:2.38.0
 BuildRequires:	gnome-online-accounts-devel >= 3.5.1
 BuildRequires:	gnutls-devel >= 2.8.5
