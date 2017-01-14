@@ -6,7 +6,7 @@ Summary:	High-level library and user-interface for Telepathy
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
 Version:	3.12.11
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/Communications
 Source0:	https://download.gnome.org/sources/empathy/3.12/%{name}-%{version}.tar.xz
@@ -70,7 +70,7 @@ Requires:	cheese >= 3.4.0
 Requires:	clutter >= 1.10.0
 Requires:	clutter-gst >= 1.9.92
 Requires:	clutter-gtk >= 1.2.0
-Requires:	cogl-devel >= 1.14.0
+Requires:	cogl >= 1.14.0
 Requires:	enchant >= 1.2.0
 Requires:	evolution-data-server
 Requires:	folks >= 0.9.5
