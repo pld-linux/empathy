@@ -16,7 +16,7 @@ BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	cheese-devel >= 3.4.0
 BuildRequires:	clutter-devel >= 1.10.0
-BuildRequires:	clutter-gst-devel >= 1.9.92
+BuildRequires:	clutter-gst2-devel
 BuildRequires:	clutter-gtk-devel >= 1.2.0
 BuildRequires:	cogl-devel >= 1.14.0
 BuildRequires:	dbus-glib-devel >= 0.74
