@@ -5,18 +5,18 @@
 Summary:	High-level library and user-interface for Telepathy
 Summary(pl.UTF-8):	Bardzo łatwy w użyciu klient Telepathy dla GNOME
 Name:		empathy
-Version:	3.12.13
+Version:	3.12.14
 Release:	1
 License:	GPL v2+
 Group:		Applications/Communications
 Source0:	https://download.gnome.org/sources/empathy/3.12/%{name}-%{version}.tar.xz
-# Source0-md5:	f7eef758d20affd7c0796f8e92daa732
-URL:		http://live.gnome.org/Empathy
+# Source0-md5:	44620fa64024d8cac6d493c94bc2ce6e
+URL:		https://wiki.gnome.org/Apps/Empathy
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	cheese-devel >= 3.4.0
 BuildRequires:	clutter-devel >= 1.10.0
-BuildRequires:	clutter-gst2-devel
+BuildRequires:	clutter-gst-devel >= 3.0
 BuildRequires:	clutter-gtk-devel >= 1.2.0
 BuildRequires:	cogl-devel >= 1.14.0
 BuildRequires:	dbus-glib-devel >= 0.74
@@ -27,14 +27,13 @@ BuildRequires:	gcr-devel >= 2.91.4
 BuildRequires:	geoclue2-devel >= 2.1.0
 BuildRequires:	geocode-glib-devel >= 0.99.1
 BuildRequires:	gettext-tools
-BuildRequires:	glib2-devel >= 1:2.38.0
+BuildRequires:	glib2-devel >= 1:2.48.0
 BuildRequires:	gnome-online-accounts-devel >= 3.5.1
-BuildRequires:	gnutls-devel >= 2.8.5
 BuildRequires:	gsettings-desktop-schemas-devel
 BuildRequires:	gstreamer-devel >= 1.0.0
 BuildRequires:	gstreamer-plugins-base-devel >= 1.0.0
 BuildRequires:	gtk+3-devel >= 3.10.0
-BuildRequires:	gtk-webkit3-devel >= 1.10.0
+BuildRequires:	gtk-webkit4-devel >= 2.10.0
 BuildRequires:	intltool >= 0.50.0
 BuildRequires:	iso-codes >= 0.35
 %{?with_uoa:BuildRequires:	libaccount-plugin-devel}
@@ -45,7 +44,7 @@ BuildRequires:	libgee-devel >= 0.8.0
 BuildRequires:	libnotify-devel >= 0.7.0
 BuildRequires:	libsecret-devel >= 0.5
 %{?with_uoa:BuildRequires:	libsignon-glib-devel >= 1.8}
-BuildRequires:	libsoup-devel
+BuildRequires:	libsoup-devel >= 2.4
 BuildRequires:	libtool >= 2:2.2
 BuildRequires:	libxml2-devel >= 1:2.6.28
 BuildRequires:	libxslt-progs
@@ -64,11 +63,11 @@ BuildRequires:	udev-glib-devel
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xz
 BuildRequires:	yelp-tools
-Requires(post,postun):	glib2 >= 1:2.38.0
+Requires(post,postun):	glib2 >= 1:2.48.0
 Requires(post,postun):	gtk-update-icon-cache
 Requires:	cheese >= 3.4.0
 Requires:	clutter >= 1.10.0
-Requires:	clutter-gst >= 1.9.92
+Requires:	clutter-gst >= 3.0
 Requires:	clutter-gtk >= 1.2.0
 Requires:	cogl >= 1.14.0
 Requires:	enchant >= 1.2.0
@@ -77,12 +76,11 @@ Requires:	folks >= 0.9.5
 Requires:	gcr >= 2.91.4
 Requires:	geoclue2 >= 2.1.0
 Requires:	geocode-glib >= 0.99.1
-Requires:	glib2 >= 1:2.38.0
+Requires:	glib2 >= 1:2.48.0
 Requires:	gnome-online-accounts >= 3.5.1
-Requires:	gnutls >= 2.8.5
 Requires:	gsettings-desktop-schemas
 Requires:	gtk+3 >= 3.10.0
-Requires:	gtk-webkit3 >= 1.10.0
+Requires:	gtk-webkit4 >= 2.10.0
 Requires:	hicolor-icon-theme
 %{?with_uoa:Requires:	libaccounts-glib >= 1.4}
 Requires:	libcanberra-gtk3 >= 0.25
